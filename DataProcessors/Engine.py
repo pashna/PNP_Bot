@@ -42,7 +42,7 @@ class Engine():
 
     def predict(self):
 
-        empty = [("no_url", 0)]
+        empty = [("", 0)]
 
         news_df = self.news_loader.get_actual_news(self.date)
         tweets_df = self.twitter_loader.get_actual_tweets(self.date)
