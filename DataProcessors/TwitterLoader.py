@@ -8,13 +8,14 @@ import numpy as np
 
 class TwitterLoader():
 
-    def __init__(self):
+    def __init__(self, time):
         self.loader = FileReader()
         self.last_file_name = "tw_2012_12_12_12_12"
         self.OUT_TWEETS_FOLDER = "/home/popka/rubbles/StreamingData/test_data_twitter"
+        self.time = time
 
 
-    def get_actual_tweets(self, time):
+    def get_actual_tweets(self, date):
 
         """
         Возвращает новости, которым исполнилось 15 минут
@@ -26,7 +27,7 @@ class TwitterLoader():
         self.load_new_tweets()
 
         #date = datetime.today()#.strftime("%Y-%m-%d %H:%M")
-        date = datetime.strptime("2015-12-24 21:55:11", "%Y-%m-%d %H:%M:%S")
+        #date = datetime.strptime("2015-12-24 21:55:11", "%Y-%m-%d %H:%M:%S")
 
         def get_minutes_since_date(date, date_from):
             #TODO: Внесто преобразования к типу date, нужно считать точное время, от которого прошло 15 минут и выделять именно такие даты. Проще и быстрее
@@ -39,9 +40,10 @@ class TwitterLoader():
         self.tweets_df["time_since_published"] = self.tweets_df.created_at.apply(lambda s: get_minutes_since_date(s, date))
 
         # Удаляем устарвшие записи:
-        self.tweets_df = self.tweets_df[self.tweets_df["time_since_published"] < time+10]
+        self.tweets_df = self.tweets_df[self.tweets_df["time_since_published"] < self.time]
 
-        print "TWEETS_DF = ", len(self.tweets_df)
+        self.loader.remove_files(self.OUT_TWEETS_FOLDER, self.last_file_name)
+
         return self.tweets_df
 
 

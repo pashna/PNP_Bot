@@ -6,9 +6,8 @@ import numpy as np
 
 class DataAggregator:
 
-    def __init__(self, first_time, last_time):
+    def __init__(self, first_time):
         self.first_time = first_time
-        self.last_time = last_time
 
 
     def _prepare(self, news_df, tweets_df):
@@ -24,15 +23,14 @@ class DataAggregator:
         # Считываем и мерджим данные
         #print "BEFORE MERGED = ", len(news_df), len(tweets_df)
 
-        dataframe = news_df.merge(tweets_df, on='url', left_index=True, right_index=False)
 
         # Общие преобразования
-        dataframe = self._general_apply(dataframe)
+#        dataframe = self._general_apply(dataframe)
 
         # Фильтруем новости с ошибочной датой и удаляем очень ранние и очень поздние
         #self._filter_news(dataframe)
 
-        return dataframe
+#        return dataframe
 
 
     def _general_apply(self, dataframe):
@@ -103,9 +101,21 @@ class DataAggregator:
 
     def aggregate(self, news_df, tweets_df, df_columns):
 
-        # копируем df
+        """
+        Выполняет аггрегацию данных, для того, чтобы подготовить их к пригодному для обучения виду
+        :param news_df:
+        :param tweets_df:
+        :param df_columns:
+        :return:
+        """
 
-        df = self._prepare(news_df, tweets_df)
+        dataframe = news_df.merge(tweets_df, on='url', left_index=True, right_index=False)
+
+        if len(dataframe) == 0:
+            return dataframe
+
+        df = self._general_apply(dataframe)
+
         #======= Для First Time
         # сплошным текстом аггрегирую все, что нужно
         ft_df = df[df["time_since_news"] <= self.first_time]

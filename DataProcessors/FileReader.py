@@ -71,14 +71,14 @@ class FileReader():
         return df, max(files_in_folder)
 
 
-    def move_files(self, folder_src, folder_dst, last_file_name):
+    def remove_files(self, folder, last_file_name):
         """
         Функция удаляет все файлы, которые появились раньше last_file_name
         :param folder:
         :param last_file_name:
         """
-        files_in_folder = self._get_files_in_folder(folder_src)
+        files_in_folder = self._get_files_in_folder(folder)
 
         for file in files_in_folder:
-            if file < last_file_name:
-                shutil.move(folder_src + "/" + file, folder_dst + "/" + file)
+            if file < last_file_name.split("/")[-1]:
+                remove(folder + "/" + file)

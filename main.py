@@ -6,13 +6,13 @@ from telegram import Updater
 import requests
 import telegram
 from DataProcessors.Engine import Engine
-from DataProcessors.NewsLoader import NewsLoader
-from DataProcessors.TwitterLoader import TwitterLoader
+from datetime import datetime, timedelta
 from Config import *
 
+# TODO: Удаление файлов
 
 def sendMessage(chat_id, text):
-    requests.get("https://api.telegram.org/bot{}/sendmessage?chat_id={}&text={}".format(getToken(), chat_id, text))
+    requests.get("https://api.telegram.org/bot{}/sendmessage?chat_id={}&text={}".format(GET_TOKEN(), chat_id, text))
 
 my_set=set()
 
@@ -26,13 +26,6 @@ def answer(bot, update):
 
 
 if __name__ == '__main__':
-    engine = Engine(15, 200)
-    print engine.predict()
-
-
-
-"""
-if __name__ == '__main__':
 
     TOKEN = GET_TOKEN()
     updater = Updater(token=TOKEN)
@@ -45,11 +38,21 @@ if __name__ == '__main__':
 
     bot = telegram.Bot(token='token')
 
+
+
+    engine = Engine(15)
+
     while(1):
-        for i in my_set:
-            sendMessage(i, "ГЫ")
+        predicted = engine.predict()
+        print predicted
+        for pred in predicted:
+            print pred
+            if pred[1] > 2:
+                for chat_id in my_set:
+                    print "sended"
+                    sendMessage(chat_id, "Гля, какая новость! Наберет {} твиттов! {}".format(int(pred[1]), pred[0]))
 
-        print("sleep")
-        time.sleep(5)
+        sleep_time = engine.syncClock()
+        print "Спим {} секунд".format(sleep_time)
+        time.sleep(sleep_time)
 
-"""
