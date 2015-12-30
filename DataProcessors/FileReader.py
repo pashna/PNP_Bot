@@ -28,11 +28,9 @@ class FileReader():
         :param column:
         :return: df
         """
-        last_size = len(df)
         dupl = df[column].duplicated()
         dupl = np.invert((dupl.as_matrix()))
         df = df[dupl]
-        print "удалено ", last_size-len(df)
         return df
 
 

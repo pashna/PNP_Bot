@@ -7,7 +7,6 @@ from DataAggregator import DataAggregator
 import cPickle
 import numpy as np
 from datetime import datetime, timedelta
-import os
 
 class Engine():
 
@@ -18,7 +17,6 @@ class Engine():
         self.data_aggregator = DataAggregator(first_time)
 
         self.date = datetime.today() - timedelta(minutes=1)
-        print(self.date)
 
         with open('gb_regressor.pkl', 'rb') as fid:
             self.model = cPickle.load(fid)
@@ -48,14 +46,11 @@ class Engine():
         tweets_df = self.twitter_loader.get_actual_tweets(self.date)
 
         if len(news_df) == 0 or len(tweets_df) == 0:
-            print "tweets or news empty"
-            print "tweets_length = {},   news_length = {}".format(len(tweets_df), len(news_df))
             return empty
 
         df = self.data_aggregator.aggregate(news_df, tweets_df, self.df_features)
 
         if len(df) == 0:
-            print "aggregate empty"
             return empty
 
         X, urls = self._get_params(df)

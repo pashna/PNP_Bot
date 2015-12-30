@@ -6,6 +6,7 @@ import time
 from BotEngine.Bot import Bot
 from BotEngine.Chats import Chats
 from urlparse import urlparse
+from datetime import datetime, timedelta
 
 
 def get_news_type(news):
@@ -21,9 +22,9 @@ if __name__ == '__main__':
     chats = Chats(db)
     bot = Bot(db, chats)
 
-    time.sleep(20)
-
     while(1):
+
+        date = datetime.today() + timedelta(minutes=1)
 
         new_news = db.get_new_news()
         for news, predicted in new_news:
@@ -34,4 +35,7 @@ if __name__ == '__main__':
 
             db.mark_news_as_sent(news)
 
-        time.sleep(10)
+        time_to_sleep = int ((date - datetime.today()).total_seconds())
+
+        if (time_to_sleep > 0):
+            time.sleep(time_to_sleep)

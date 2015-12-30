@@ -4,13 +4,14 @@ __author__ = 'popka'
 from datetime import datetime
 from FileReader import FileReader
 import numpy as np
+from Config import GET_NEWS_FOLDER
 
 class NewsLoader():
 
     def __init__(self, time):
         self.loader = FileReader()
         self.last_file_name = "news_2012_12_12_12_12.csv"
-        self.OUT_NEWS_FOLDER = "/home/popka/rubbles/StreamingData/test_data_news"
+        self.OUT_NEWS_FOLDER = GET_NEWS_FOLDER()
         self.time = time
 
 
@@ -40,8 +41,8 @@ class NewsLoader():
 
         # Удаляем устарвшие записи:
         self.news_df = self.news_df[self.news_df["time_since_published"] < self.time+5]
-        print "NEWS_DF = ", len(self.news_df[self.news_df["time_since_published"] == self.time])
-        print self.news_df[self.news_df["time_since_published"] == self.time]
+        #print "NEWS_DF = ", len(self.news_df[self.news_df["time_since_published"] == self.time])
+        #print self.news_df[self.news_df["time_since_published"] == self.time]
 
         self.loader.remove_files(self.OUT_NEWS_FOLDER, self.last_file_name)
         return self.news_df[self.news_df["time_since_published"] == self.time]

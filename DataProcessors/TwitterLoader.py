@@ -5,13 +5,14 @@ __author__ = 'popka'
 from FileReader import FileReader
 from datetime import datetime
 import numpy as np
+from Config import GET_TWEETS_FOLDER
 
 class TwitterLoader():
 
     def __init__(self, time):
         self.loader = FileReader()
         self.last_file_name = "tw_2012_12_12_12_12"
-        self.OUT_TWEETS_FOLDER = "/home/popka/rubbles/StreamingData/test_data_twitter"
+        self.OUT_TWEETS_FOLDER = GET_TWEETS_FOLDER()
         self.time = time
 
 

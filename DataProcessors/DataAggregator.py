@@ -10,29 +10,6 @@ class DataAggregator:
         self.first_time = first_time
 
 
-    def _prepare(self, news_df, tweets_df):
-        """
-        Функция считывает данные и производит с ними общие преобразования. Вычисляет:
-        1) количество минут с момента публикации записи до данного твита
-        2) номер дня недели новости
-        3) время с полуночи новости
-
-        :param news_file: путь к файлу с новостями
-        :param tweets_file: путь к файлу с твиттами
-        """
-        # Считываем и мерджим данные
-        #print "BEFORE MERGED = ", len(news_df), len(tweets_df)
-
-
-        # Общие преобразования
-#        dataframe = self._general_apply(dataframe)
-
-        # Фильтруем новости с ошибочной датой и удаляем очень ранние и очень поздние
-        #self._filter_news(dataframe)
-
-#        return dataframe
-
-
     def _general_apply(self, dataframe):
 
         """
@@ -45,7 +22,6 @@ class DataAggregator:
             news_date = datetime.strptime(news_date, '%Y-%m-%d %H:%M')
             tweet_date = datetime.strptime(tweet_date, '%Y-%m-%d %H:%M:%S')
 
-            print "{} - {} = {}".format(tweet_date, news_date, int((tweet_date-news_date).total_seconds()/60))
             return int((tweet_date-news_date).total_seconds()/60)
 
         def get_week_day(date):
@@ -64,40 +40,6 @@ class DataAggregator:
 
         return dataframe
 
-
-
-    def _get_hours_before(self, date, hours=3):
-            """
-            "Перевод часов"
-            Функция возвращает дату-строку, за hours часов до даты date
-            Если нужно перевести стрелки часов вперед - передаем со знаком минус
-            :param date:
-            :param hours:
-            :return:
-            """
-            date = datetime.strptime(date, '%Y-%m-%d %H:%M')
-            d = date - timedelta(hours=hours)
-            d = str(d).split(":")
-            d = d[0]+":"+d[1]
-            return d
-
-    """
-    def _filter_news(self, dataframe):
-
-        # Есть новости с ошибочной датой. Их исключаем
-        dataframe = dataframe[dataframe["time_since_news"] > 0]
-
-        # Отсечем новости в первые и в последние n_hours часов
-        n_hours = 8
-        min_date = dataframe.news_date.min()
-        max_date = dataframe.news_date.max()
-
-        first_date =  self._get_hours_before(min_date, -n_hours)
-        last_date = self._get_hours_before(max_date, n_hours)
-
-        dataframe = dataframe[dataframe["news_date"] > first_date]
-        dataframe = dataframe[dataframe["news_date"] < last_date]
-    """
 
     def aggregate(self, news_df, tweets_df, df_columns):
 
@@ -175,7 +117,6 @@ class DataAggregator:
             if col not in df.columns:
                 df[col] = pd.Series(np.zeros(len(df)))
 
-        print df.columns
         return df
 
 

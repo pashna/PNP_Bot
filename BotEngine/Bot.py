@@ -1,7 +1,6 @@
 # -*- coding: utf-8 -*-
 __author__ = 'popka'
 
-import requests
 from telegram import Updater
 import requests
 import telegram
@@ -67,5 +66,3 @@ class Bot():
         text = "Ухты! Ты только глянь, какая новость! Наберет {} твиттов! {}".format(int(predicted), url)
         for chat_id in chats:
             requests.get("https://api.telegram.org/bot{}/sendmessage?chat_id={}&text={}".format(GET_TOKEN(), chat_id, text))
-
-
