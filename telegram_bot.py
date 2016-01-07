@@ -18,7 +18,7 @@ def get_news_type(news):
 
 if __name__ == '__main__':
 
-    time.sleep(120)
+    time.sleep(400)
     while 1:
         try:
             db = DB()

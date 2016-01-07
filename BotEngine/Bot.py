@@ -21,7 +21,7 @@ class Bot():
         dispatcher.addTelegramMessageHandler(self.answer)
 
         self.updater.start_polling()
-        self.bot = telegram.Bot(token='token')
+        self.bot = telegram.Bot(token=GET_TOKEN())
 
 
     def start(self, bot, update):

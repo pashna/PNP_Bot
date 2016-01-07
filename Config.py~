@@ -1,0 +1,23 @@
+__author__ = 'popka'
+
+def GET_TOKEN():
+    return "142352925:AAE8bJj3_BPRSfZbiQi-nA8uGqKlA"
+
+
+def GET_DB_SETTING():
+    return {
+        "host": "192.241.251.59",
+        "user": "pnp_user",
+        "password": "telegram312",
+        "db": "telegram_db"
+            }
+
+def GET_NEWS_FOLDER():
+    return "/home/popka/rubbles/StreamingData/test_data_news"
+
+def GET_TWEETS_FOLDER():
+    return "/home/popka/rubbles/StreamingData/test_data_twitter"
+
+def GET_FIRST_TIME():
+    return 15
+
