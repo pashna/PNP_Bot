@@ -15,7 +15,7 @@ class DB():
 
     # News
     str_get_new_news = "select news_url, news_predicted from news where is_sended=0;"
-    str_add_news = "insert into news (news_url, news_predicted, is_sended) VALUES ('{}', {}, 0);"
+    str_add_news = "insert into news (news_url, news_predicted, is_sended, news_date) VALUES ('{}', {}, 0, {});"
     str_mark_news_as_sent = "update news set is_sended=1 where news_url='{}';"
 
 
@@ -31,13 +31,13 @@ class DB():
         self.cursor = self.db.cursor()
 
 
-    def insert_news(self, url, predicted):
+    def insert_news(self, url, predicted, news_date):
         """
         Добавляет новость в базу
         :param url:
         :param predicted:
         """
-        add_string = DB.str_add_news.format(url, predicted)
+        add_string = DB.str_add_news.format(url, predicted, news_date)
         self.cursor.execute(add_string)
 
 

@@ -26,7 +26,8 @@ if __name__ == '__main__':
                     if pred[0] != "":
                         url = pred[0]
                         value = float("{0:.2f}".format(pred[1]))
-                        db.insert_news(url, value)
+                        news_date = pred[2]
+                        db.insert_news(url, value, news_date)
 
                 sleep_time = engine.syncClock()
                 print "Спим {} секунд".format(sleep_time)
