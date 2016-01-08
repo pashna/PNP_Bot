@@ -62,6 +62,7 @@ class NewsLoader():
 
         if hasattr(self, 'news_df'):
             self.news_df = self.news_df.append(df)
+            print self.news_df
         else:
             self.news_df = df
 

@@ -62,6 +62,7 @@ class FileReader():
                     df = n_df
                 else:
                     df = df.append(n_df)
+
         if df is not None:
             df = self._drop_duplicates(df, drop_column)
             df.reset_index(inplace=True, drop=True)

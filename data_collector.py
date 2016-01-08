@@ -11,7 +11,7 @@ from Config import GET_FIRST_TIME
 if __name__ == '__main__':
 
 
-    time.sleep(400)
+    time.sleep(5)
     while (1):
         try:
             db = DB()
@@ -28,6 +28,7 @@ if __name__ == '__main__':
                 sleep_time = engine.syncClock()
                 print "Спим {} секунд".format(sleep_time)
                 time.sleep(sleep_time)
+
 
         except Exception as e:
             print "DataCollector Exception: {}".format(e)
