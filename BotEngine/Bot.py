@@ -5,6 +5,7 @@ from telegram import Updater
 import requests
 import telegram
 from Config import *
+from Statistic import Statistic
 
 
 class Bot():
@@ -18,10 +19,13 @@ class Bot():
 
         dispatcher.addTelegramCommandHandler('start', self.start)
         dispatcher.addTelegramCommandHandler('restrict', self.add_restrict)
+        dispatcher.addTelegramCommandHandler('get_stat', self.stats)
         dispatcher.addTelegramMessageHandler(self.answer)
 
         self.updater.start_polling()
         self.bot = telegram.Bot(token=GET_TOKEN())
+
+        self.statistician = Statistic(GET_FIRST_TIME(), GET_LAST_TIME(), db)
 
 
     def start(self, bot, update):
@@ -43,8 +47,12 @@ class Bot():
             text = message['text']
             text = text.split(' ')
             hours = int(text[1])
-            #self.chats.add_restrict(chat_id, type, value)
-            #bot.sendMessage(chat_id=chat_id, text="Установил для {} ограничение в {} твиттов".format(type, value))
+
+            stat = self.statistician.get_statistic(hours)
+            text = "За {} час. было предсказано {} новостей. \nИз них топовых было {}. \nПравильно предсказанно топовых {}. \nОшибочно предсказанно топовых {} \nПропущено топовых"
+            text = text.format(hours, stat["all"], stat["correct"]+stat["missed"], stat["correct"], stat["error"], stat["missed"])
+
+            bot.sendMessage(chat_id=chat_id, text=text)
 
         except Exception as e:
             print e

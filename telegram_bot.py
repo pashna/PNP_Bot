@@ -1,24 +1,18 @@
 # -*- coding: utf-8 -*-
+
 __author__ = 'popka'
 
 from DataBase.DB import DB
 import time
 from BotEngine.Bot import Bot
 from BotEngine.Chats import Chats
-from urlparse import urlparse
 from datetime import datetime, timedelta
-
-
-def get_news_type(news):
-    url = urlparse(news)
-    news = url.netloc
-    news = news.replace("www.", "")
-    return news
+from utils.utils import get_news_type
 
 
 if __name__ == '__main__':
 
-    time.sleep(400)
+    #time.sleep(400)
     while 1:
         try:
             db = DB()

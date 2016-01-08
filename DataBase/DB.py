@@ -15,8 +15,9 @@ class DB():
 
     # News
     str_get_new_news = "select news_url, news_predicted from news where is_sended=0;"
-    str_add_news = "insert into news (news_url, news_predicted, is_sended, news_date) VALUES ('{}', {}, 0, {});"
+    str_add_news = "insert into news (news_url, news_predicted, is_sended, news_date) VALUES ('{}', {}, 0, '{}');"
     str_mark_news_as_sent = "update news set is_sended=1 where news_url='{}';"
+    str_get_news_after_date = "select news_url, news_predicted from news where news_date>'{}'"
 
 
     def __init__(self):
@@ -38,6 +39,7 @@ class DB():
         :param predicted:
         """
         add_string = DB.str_add_news.format(url, predicted, news_date)
+        print add_string
         self.cursor.execute(add_string)
 
 
@@ -82,3 +84,10 @@ class DB():
             self.cursor.execute(str)
         except Exception:
             print "already in db"
+
+
+    def get_news_after_date(self, date):
+        str = DB.str_get_news_after_date.format(date)
+        self.cursor.execute(str)
+        rows = self.cursor.fetchall()
+        return rows

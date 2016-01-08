@@ -67,8 +67,6 @@ class FileReader():
 
 
 
-
-
     def get_concated_files(self, folder, date, drop_column, last_file_name):
         """
         Функция возвращает DF, собранный из файлов, которые лежат в папке folder.
@@ -131,7 +129,6 @@ class FileReader():
         folders = self._get_folder_name(datetime.today(), folder, hours)
         files_in_folder = self._get_files_in_folder(folders)
 
-        print files_in_folder
         df = None
         for file in files_in_folder:
             n_df = pd.read_csv(file, sep=",")

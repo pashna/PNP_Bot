@@ -10,7 +10,7 @@ from datetime import datetime, timedelta
 
 class Engine():
 
-    def __init__(self, first_time=14):
+    def __init__(self, first_time):
         self.first_time = first_time
         self.twitter_loader = TwitterLoader(first_time)
         self.news_loader = NewsLoader(first_time)
