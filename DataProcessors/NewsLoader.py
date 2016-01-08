@@ -23,7 +23,7 @@ class NewsLoader():
         """
 
         # Обновляем записи
-        if (self._load_new_news() is None):
+        if (self._load_new_news(date) is None):
             return None
 
         #date = datetime.today()#.strftime("%Y-%m-%d %H:%M")
@@ -45,17 +45,17 @@ class NewsLoader():
         #print "NEWS_DF = ", len(self.news_df[self.news_df["time_since_published"] == self.time])
         #print self.news_df[self.news_df["time_since_published"] == self.time]
 
-        self.loader.remove_files(self.OUT_NEWS_FOLDER, self.last_file_name)
+        #self.loader.remove_files(self.OUT_NEWS_FOLDER, self.last_file_name)
         return self.news_df[self.news_df["time_since_published"] == self.time]
 
 
-    def _load_new_news(self):
+    def _load_new_news(self, date):
         """
         Функция считывает новые новости из файла,
         Удаляет повторения
         """
 
-        df, self.last_file_name = self.loader.get_concated_files(self.OUT_NEWS_FOLDER, "url", self.last_file_name)
+        df, self.last_file_name = self.loader.get_concated_files(self.OUT_NEWS_FOLDER, date, "url", self.last_file_name)
         if df is None:
             print "EMPTY"
             return None

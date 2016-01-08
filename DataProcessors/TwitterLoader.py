@@ -25,7 +25,7 @@ class TwitterLoader():
         """
 
         # Обновляем записи
-        if self.load_new_tweets() is None:
+        if self.load_new_tweets(date) is None:
             return None
 
         #date = datetime.today()#.strftime("%Y-%m-%d %H:%M")
@@ -44,19 +44,19 @@ class TwitterLoader():
         # Удаляем устарвшие записи:
         self.tweets_df = self.tweets_df[self.tweets_df["time_since_published"] < self.time]
 
-        self.loader.remove_files(self.OUT_TWEETS_FOLDER, self.last_file_name)
+        #self.loader.remove_files(self.OUT_TWEETS_FOLDER, self.last_file_name)
 
         return self.tweets_df
 
 
 
 
-    def load_new_tweets(self):
+    def load_new_tweets(self, date):
         """
         Функция считывает новые твитты из файла
         """
 
-        df, self.last_file_name = self.loader.get_concated_files(self.OUT_TWEETS_FOLDER, "tw_id", self.last_file_name)
+        df, self.last_file_name = self.loader.get_concated_files(self.OUT_TWEETS_FOLDER, date, "tw_id", self.last_file_name)
         if df is None:
             return None
 

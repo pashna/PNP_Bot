@@ -11,6 +11,7 @@ from Config import GET_FIRST_TIME
 if __name__ == '__main__':
 
 
+
     time.sleep(5)
     while (1):
         try:
@@ -23,7 +24,9 @@ if __name__ == '__main__':
                 for pred in predicted:
                     # Если новость есть
                     if pred[0] != "":
-                        db.insert_news(pred[0], pred[1])
+                        url = pred[0]
+                        value = float("{0:.2f}".format(pred[1]))
+                        db.insert_news(url, value)
 
                 sleep_time = engine.syncClock()
                 print "Спим {} секунд".format(sleep_time)
@@ -32,3 +35,4 @@ if __name__ == '__main__':
 
         except Exception as e:
             print "DataCollector Exception: {}".format(e)
+
