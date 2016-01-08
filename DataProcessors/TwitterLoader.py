@@ -25,7 +25,8 @@ class TwitterLoader():
         """
 
         # Обновляем записи
-        self.load_new_tweets()
+        if self.load_new_tweets() is None:
+            return None
 
         #date = datetime.today()#.strftime("%Y-%m-%d %H:%M")
         #date = datetime.strptime("2015-12-24 21:55:11", "%Y-%m-%d %H:%M:%S")
@@ -56,8 +57,8 @@ class TwitterLoader():
         """
 
         df, self.last_file_name = self.loader.get_concated_files(self.OUT_TWEETS_FOLDER, "tw_id", self.last_file_name)
-        if len(df) == 0:
-            return
+        if df is None:
+            return None
 
         if hasattr(self, 'tweets_df'):
             self.tweets_df = self.tweets_df.append(df)

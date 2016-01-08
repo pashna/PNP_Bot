@@ -23,7 +23,8 @@ class NewsLoader():
         """
 
         # Обновляем записи
-        self._load_new_news()
+        if (self._load_new_news() is None):
+            return None
 
         #date = datetime.today()#.strftime("%Y-%m-%d %H:%M")
         #date = datetime.strptime("2015-12-24 21:55", "%Y-%m-%d %H:%M")#.date()
@@ -55,8 +56,9 @@ class NewsLoader():
         """
 
         df, self.last_file_name = self.loader.get_concated_files(self.OUT_NEWS_FOLDER, "url", self.last_file_name)
-        if len(df) == 0:
-            return
+        if df == None:
+            print "EMPTY"
+            return None
 
         if hasattr(self, 'news_df'):
             self.news_df = self.news_df.append(df)

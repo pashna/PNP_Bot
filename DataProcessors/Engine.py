@@ -45,7 +45,7 @@ class Engine():
         news_df = self.news_loader.get_actual_news(self.date)
         tweets_df = self.twitter_loader.get_actual_tweets(self.date)
 
-        if len(news_df) == 0 or len(tweets_df) == 0:
+        if news_df is None or tweets_df is None:
             return empty
 
         df = self.data_aggregator.aggregate(news_df, tweets_df, self.df_features)

@@ -62,11 +62,12 @@ class FileReader():
                     df = n_df
                 else:
                     df = df.append(n_df)
-
-        df = self._drop_duplicates(df, drop_column)
-        df.reset_index(inplace=True, drop=True)
-
-        return df, max(files_in_folder)
+        if df is not None:
+            df = self._drop_duplicates(df, drop_column)
+            df.reset_index(inplace=True, drop=True)
+            return df, max(files_in_folder)
+        else:
+            return None, None
 
 
     def remove_files(self, folder, last_file_name):
