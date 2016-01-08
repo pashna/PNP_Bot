@@ -20,7 +20,6 @@ class FileReader():
         :return: list(files in folder)
         """
 
-
         files_in_folder = []
 
         for folder in folders:
@@ -43,30 +42,26 @@ class FileReader():
         return df
 
 
-    def _get_folder_name(self, date, folder):
+    def _get_folder_name(self, date, folder, hours):
         """
         Функция возвращает папки, в которых нужно искать, в соответствии с датой.
         Таких папок две. За текущий час и за предыдущий. Какой кошмар, Боже, за что?
         :param date:
         :param folder: корнеая папка (новости или твитты)
+        :param hours: количество часов, в течении которых мы ищем папки (в прошлом).
         """
         # вычисляем название папкок, в которой нужно искать новые файлы
         folders = []
-        date_folder_name = date.strftime('%Y_%m_%d_%H')
-        current_folder = folder + "/" + date_folder_name
-
-        if os.path.exists(current_folder):
-            folders.append(current_folder)
 
         # Вычисляем имя старой папки
-        date_hour_ago = date - timedelta(hours=1)
-        past_date_folder_name = date_hour_ago.strftime('%Y_%m_%d_%H')
-        past_folder = folder + "/" + past_date_folder_name
+        for hour in range(hours+1):
+            date_hour_ago = date - timedelta(hours=hour)
+            past_date_folder_name = date_hour_ago.strftime('%Y_%m_%d_%H')
+            past_folder = folder + "/" + past_date_folder_name
 
-        #print past_folder, current_folder
+            if os.path.exists(past_folder):
+                folders.append(past_folder)
 
-        if os.path.exists(past_folder):
-            folders.append(past_folder)
 
         return folders
 
@@ -85,23 +80,16 @@ class FileReader():
         :param last_file_name: имя последнего сохраненного файла
         :return: dataframe, max_file_name
         """
-        folders = self._get_folder_name(date, folder)
+        folders = self._get_folder_name(date, folder, 1)
 
         files_in_folder = self._get_files_in_folder(folders)
 
-        #print files_in_folder
-
         df = None
-
-        print "last_file = " + last_file_name.split("/")[-1]
-        print files_in_folder
 
         for file in files_in_folder:
 
             # образаем полный путь
             if file.split("/")[-1] > last_file_name.split("/")[-1]:
-
-                print file.split("/")[-1]
 
                 n_df = pd.read_csv(file, sep=",")
                 if df is None:
@@ -129,3 +117,32 @@ class FileReader():
         for file in files_in_folder:
             if file < last_file_name.split("/")[-1]:
                 remove(folder + "/" + file)
+
+
+    def get_concat_files_by_hours(self, folder, hours, drop_column):
+        """
+        Функция возвращает df, собранный из csv корневой папки folder, для папок в течение hours.
+        Убирает дубликаты по колонке drop_column
+        :param folder:
+        :param hours:
+        :param drop_column:
+        :return:
+        """
+        folders = self._get_folder_name(datetime.today(), folder, hours)
+        files_in_folder = self._get_files_in_folder(folders)
+
+        print files_in_folder
+        df = None
+        for file in files_in_folder:
+            n_df = pd.read_csv(file, sep=",")
+
+            if df is None:
+                df = n_df
+            else:
+                df = df.append(n_df)
+
+        if df is not None:
+            df = self._drop_duplicates(df, drop_column)
+            df.reset_index(inplace=True, drop=True)
+
+        return df

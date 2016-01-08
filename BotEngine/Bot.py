@@ -36,6 +36,21 @@ class Bot():
         bot.sendMessage(chat_id=update.message.chat_id, text="Привет, друг! Я буду рассказывать обо всем самом интересном")
 
 
+    def stats(self, bot, update):
+        try:
+            message = update['message']
+            chat_id = update.message.chat_id
+            text = message['text']
+            text = text.split(' ')
+            hours = int(text[1])
+            #self.chats.add_restrict(chat_id, type, value)
+            #bot.sendMessage(chat_id=chat_id, text="Установил для {} ограничение в {} твиттов".format(type, value))
+
+        except Exception as e:
+            print e
+            bot.sendMessage(chat_id=update.message.chat_id, text="Не понял. Введи, например\n /stats 3")
+
+
     def add_restrict(self, bot, update):
 
         try:

@@ -14,6 +14,7 @@ class TwitterLoader():
         self.last_file_name = "tw_2012_12_12_12_12"
         self.OUT_TWEETS_FOLDER = GET_TWEETS_FOLDER()
         self.time = time
+        self.tweets_df = None
 
 
     def get_actual_tweets(self, date):
@@ -25,17 +26,15 @@ class TwitterLoader():
         """
 
         # Обновляем записи
-        if self.load_new_tweets(date) is None:
-            return None
+        self.load_new_tweets(date)
 
-        #date = datetime.today()#.strftime("%Y-%m-%d %H:%M")
-        #date = datetime.strptime("2015-12-24 21:55:11", "%Y-%m-%d %H:%M:%S")
+        if self.tweets_df is None:
+            return None
 
         def get_minutes_since_date(date, date_from):
             #TODO: Внесто преобразования к типу date, нужно считать точное время, от которого прошло 15 минут и выделять именно такие даты. Проще и быстрее
             date = datetime.strptime(date, '%Y-%m-%d %H:%M:%S')
 
-            #print "{} - {} = {}".format(date_from, date, int((date_from-date).total_seconds()/60))
             return int((date_from-date).total_seconds()/60)
 
         # Считаем, сколько времени прошло с момента публикации
@@ -43,8 +42,6 @@ class TwitterLoader():
 
         # Удаляем устарвшие записи:
         self.tweets_df = self.tweets_df[self.tweets_df["time_since_published"] < self.time]
-
-        #self.loader.remove_files(self.OUT_TWEETS_FOLDER, self.last_file_name)
 
         return self.tweets_df
 
@@ -60,7 +57,7 @@ class TwitterLoader():
         if df is None:
             return None
 
-        if hasattr(self, 'tweets_df'):
+        if self.tweets_df is not None:
             self.tweets_df = self.tweets_df.append(df)
         else:
             self.tweets_df = df

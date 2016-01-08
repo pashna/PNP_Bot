@@ -6,8 +6,9 @@ import numpy as np
 
 class DataAggregator:
 
-    def __init__(self, first_time):
+    def __init__(self, first_time, last_time=180):
         self.first_time = first_time
+        self.last_time = last_time
 
 
     def _general_apply(self, dataframe):
@@ -41,7 +42,7 @@ class DataAggregator:
         return dataframe
 
 
-    def aggregate(self, news_df, tweets_df, df_columns):
+    def aggregate_first_time(self, news_df, tweets_df, df_columns):
 
         """
         Выполняет аггрегацию данных, для того, чтобы подготовить их к пригодному для обучения виду
@@ -51,7 +52,7 @@ class DataAggregator:
         :return:
         """
 
-        dataframe = news_df.merge(tweets_df, on='url', left_index=True, right_index=False)
+        dataframe = news_df.merge(tweets_df, on='url', left_index=True, right_index=False)#, how='outer')
 
         if len(dataframe) == 0:
             return dataframe
@@ -87,10 +88,12 @@ class DataAggregator:
         user_listed_count.reset_index(inplace=True)
         df = pd.merge(df, user_listed_count, on='url', left_index=True, right_index=False, how="outer")
 
+
         """
         #======= Для Second Time
-
-        st_df = df[df["time_since_news"] <= self.last_time]
+        df1 = self._general_apply(dataframe)
+        st_df = df1[df1["time_since_news"] <= self.last_time]
+        print len(df1), len(st_df)
 
         grouped = st_df.groupby("url")
 
@@ -120,3 +123,44 @@ class DataAggregator:
         return df
 
 
+    def aggregate_last_time(self, news_df, tweets_df):
+
+        dataframe = news_df.merge(tweets_df, on='url', left_index=True, right_index=False)#, how='outer')
+
+        df = self._general_apply(dataframe)
+
+        # считаем, сколько времени прошло с момента публикации новости до текущего момента
+        now = datetime.today()
+        def time_from_now(news_date, now):
+            news_date = datetime.strptime(news_date, '%Y-%m-%d %H:%M')
+            return int((now-news_date).total_seconds()/60)
+
+        df["time_from_now"] = df.news_date.apply(lambda s: time_from_now(s, now))
+
+        # выбираем только те, которым уже исполнилось last_time минут
+        df = df[df["time_from_now"] >= self.last_time]
+
+        if (len(df) == 0):
+            return None
+
+        st_df = df[df["time_since_news"] <= self.last_time]
+        if (st_df == 0):
+            return None
+
+        grouped = st_df.groupby("url")
+
+        # Считаем число твиттов после Last Date
+        count_of_tweets = pd.DataFrame(grouped["url"].count())
+        count_of_tweets.columns = ["last_time_tweet"]
+        count_of_tweets.reset_index(inplace=True)
+        st_df = pd.merge(st_df, count_of_tweets, on='url', left_index=True, right_index=False, how="outer")
+
+
+        # Считаем число ретвитов после LAST_TIME
+        retweeted_count_sum = pd.DataFrame(grouped["is_retweet"].sum())
+        retweeted_count_sum.columns = ["last_time_retweet"]
+        retweeted_count_sum.reset_index(inplace=True)
+        st_df = pd.merge(st_df, retweeted_count_sum, on='url', left_index=True, right_index=False, how="outer")
+
+
+        return st_df
