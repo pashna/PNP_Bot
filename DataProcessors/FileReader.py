@@ -66,6 +66,7 @@ class FileReader():
             df = self._drop_duplicates(df, drop_column)
             df.reset_index(inplace=True, drop=True)
             return df, max(files_in_folder)
+
         else:
             return None, None
 

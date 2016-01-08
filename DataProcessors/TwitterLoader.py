@@ -68,3 +68,4 @@ class TwitterLoader():
         dupl = self.tweets_df["tw_id"].duplicated()
         dupl = np.invert((dupl.as_matrix()))
         self.tweets_df = self.tweets_df[dupl]
+        return 1

@@ -56,7 +56,7 @@ class NewsLoader():
         """
 
         df, self.last_file_name = self.loader.get_concated_files(self.OUT_NEWS_FOLDER, "url", self.last_file_name)
-        if df == None:
+        if df is None:
             print "EMPTY"
             return None
 
@@ -68,3 +68,4 @@ class NewsLoader():
         dupl = self.news_df["url"].duplicated()
         dupl = np.invert((dupl.as_matrix()))
         self.news_df = self.news_df[dupl]
+        return 1

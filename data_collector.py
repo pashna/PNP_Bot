@@ -11,7 +11,7 @@ from Config import GET_FIRST_TIME
 if __name__ == '__main__':
 
 
-#    time.sleep(100)
+    #time.sleep(100)
 #    while (1):
 #        try:
             db = DB()
@@ -29,5 +29,5 @@ if __name__ == '__main__':
                 print "Спим {} секунд".format(sleep_time)
                 time.sleep(sleep_time)
 
-        #except Exception as e:
-        #    print e
+#        except Exception as e:
+#            print "DataCollector Exception: {}".format(e)

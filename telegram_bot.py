@@ -44,4 +44,4 @@ if __name__ == '__main__':
                     time.sleep(time_to_sleep)
 
         except Exception as e:
-            print e
+            print "TelegramBot Exception: {}".format(e)
