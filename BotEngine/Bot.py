@@ -49,7 +49,7 @@ class Bot():
             hours = int(text[1])
 
             stat = self.statistician.get_statistic(hours)
-            text = "За {} час. было предсказано {} новостей. \nИз них топовых было {}. \nПравильно предсказанно топовых {}. \nОшибочно предсказанно топовых {} \nПропущено топовых"
+            text = "За {} час. было предсказано {} новостей. \nИз них топовых было {}. \nПравильно предсказанно топовых {}. \nОшибочно предсказанно топовых {} \nПропущено топовых {}"
             text = text.format(hours, stat["all"], stat["correct"]+stat["missed"], stat["correct"], stat["error"], stat["missed"])
 
             bot.sendMessage(chat_id=chat_id, text=text)
