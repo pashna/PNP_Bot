@@ -56,7 +56,7 @@ class Bot():
 
         except Exception as e:
             print e
-            bot.sendMessage(chat_id=update.message.chat_id, text="Не понял. Введи, например\n /stats 3")
+            bot.sendMessage(chat_id=update.message.chat_id, text="Не понял. Введи, например\n /get_stat 6\n\n Возможно, промежуток времени недостаточный")
 
 
     def add_restrict(self, bot, update):
