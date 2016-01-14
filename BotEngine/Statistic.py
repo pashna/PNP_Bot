@@ -7,6 +7,7 @@ import Config
 from datetime import datetime, timedelta
 import pandas as pd
 from utils.utils import get_news_type
+from math import exp
 
 
 class Statistic():
@@ -18,7 +19,8 @@ class Statistic():
         self.db = db
 
 
-    def get_statistic(self, hours):
+    """
+    def get_statistic(self, hours, restriction):
         result_matrix = self._get_real_and_predicted(hours)
 
         print(result_matrix)
@@ -28,6 +30,7 @@ class Statistic():
         for row in result_matrix:
             print row
             type = get_news_type(row[0])
+
             threshold = self.get_threshold(type)
             real = row[1]
             predicted = row[2]
@@ -47,20 +50,64 @@ class Statistic():
             result["all"] += 1
 
         return result
+    """
 
+    def get_statistic(self, hours, restriction):
+        """
+        :param hours: Время, за которое собираем статистику
+        :param restriction: ограничения для пользователя, который ее запрашивает
+        :param deviation: ошибка в процентах, которую считаем адекватной. Может, заменить функцией какой-нибудь?
+        :return:
+        """
+        result_matrix = self._get_real_and_predicted(hours)
+
+        result = {"missed":0, "correct":0, "error": 0, "all": 0, "ndcg": 0}
+
+        showed_real_predicted = []
+        for row in result_matrix:
+            type = get_news_type(row[0])
+
+            real = row[1]
+            predicted = row[2]
+
+            if type in restriction:
+                threshold = restriction[type]
+            else:
+                threshold = self.get_default_threshold(type)
+
+            print "!", real, predicted, threshold, type
+            if real > threshold or predicted > threshold:
+
+                showed_real_predicted.append((real, predicted))
+
+                print real, "-", predicted, '<' , self._get_division(real)*real
+
+                if abs(real - predicted) < self._get_division(real)*real: #округляем в большую сторону
+                    result["correct"] += 1
+
+                elif real > predicted:
+                    result["missed"] += 1
+
+                elif real < predicted:
+                    result["error"] += 1
+
+
+            if real > threshold:
+                result["all"] += 1
+
+        return result
+
+
+    def _get_division(self, y):
+        return 0.4/(1+exp(-0.003*y))
 
 
 
     def _get_real_and_predicted(self, hours):
         real_df = self._get_df_real(hours)
         predicted_df = self._get_df_from_db(hours)
-        #if predicted_df is not None or len(predicted_df)==0 or len(real_df)==0:
-        #    return
-        print real_df["url"]
-        print "========="
-        print predicted_df["url"]
+
         df = predicted_df.merge(real_df, on='url', how='inner', left_index=True, right_index=False)
-        #print len(df)
 
         return df[["url", Config.GET_PREDICTED_FEATURE(), "predicted"]].as_matrix()
 
@@ -96,20 +143,19 @@ class Statistic():
         return df
 
 
-    def get_threshold(self, type):
+    def get_default_threshold(self, type):
         dict = {
-            'vc.ru': 40,
-            'tjournal.ru': 80,
-            'forbes.ru': 57,
-            'lenta.ru': 48,
-            'lifenews.ru': 375,
-            'meduza.io': 342,
-            'navalny.com': 461,
-            'ria.ru': 8,
+            'VC': 23,
+            'forbes.ru': 31,
+            'lenta.ru': 28,
+            'lifenews.ru': 186,
+            'meduza.io': 155,
+            'navalny.com': 289,
+            'ria.ru': 6,
             'roem.ru': 1,
-            'slon.ru': 247,
-            'vedomosti.ru': 46,
-            'vesti.ru': 159
+            'slon.ru': 122,
+            'vedomosti.ru': 25,
+            'vesti.ru': 73,
         }
 
         return dict[type]

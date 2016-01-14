@@ -19,7 +19,7 @@ class Bot():
 
         dispatcher.addTelegramCommandHandler('start', self.start)
         dispatcher.addTelegramCommandHandler('restrict', self.add_restrict)
-        dispatcher.addTelegramCommandHandler('get_stat', self.stats)
+        dispatcher.addTelegramCommandHandler('/get_stat', self.stats)
         dispatcher.addTelegramMessageHandler(self.answer)
 
         self.updater.start_polling()
@@ -48,15 +48,17 @@ class Bot():
             text = text.split(' ')
             hours = int(text[1])
 
-            stat = self.statistician.get_statistic(hours)
-            text = "За {} час. было предсказано {} новостей. \nИз них топовых было {}. \nПравильно предсказанно топовых {}. \nОшибочно предсказанно топовых {} \nПропущено топовых {}"
+
+            stat = self.statistician.get_statistic(hours, self.chats.chats[chat_id])
+
+            text = "За {} час. было предсказано {} новостей. \nИз них топовых было {}. \nПравильно предсказанно топовых {}. \nОшибочно предсказанно топовых {}. \nПропущено топовых {}."
             text = text.format(hours, stat["all"], stat["correct"]+stat["missed"], stat["correct"], stat["error"], stat["missed"])
 
             bot.sendMessage(chat_id=chat_id, text=text)
 
         except Exception as e:
             print e
-            bot.sendMessage(chat_id=update.message.chat_id, text="Не понял. Введи, например\n /get_stat 6\n\n Возможно, промежуток времени недостаточный")
+            bot.sendMessage(chat_id=update.message.chat_id, text="Не понял. Введи, например\n /get_stat 15\n - статистика за 15 часов\nВозможно, промежуток времени недостаточный")
 
 
     def add_restrict(self, bot, update):

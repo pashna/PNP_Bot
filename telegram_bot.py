@@ -12,9 +12,9 @@ from utils.utils import get_news_type
 
 if __name__ == '__main__':
 
-    time.sleep(400)
-    while 1:
-        try:
+    #time.sleep(400)
+ #   while 1:
+ #       try:
             db = DB()
             chats = Chats(db)
             bot = Bot(db, chats)
@@ -37,5 +37,5 @@ if __name__ == '__main__':
                 if (time_to_sleep > 0):
                     time.sleep(time_to_sleep)
 
-        except Exception as e:
-            print "TelegramBot Exception: {}".format(e)
+#        except Exception as e:
+#            print "TelegramBot Exception: {}".format(e)
