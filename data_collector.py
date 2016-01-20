@@ -12,7 +12,7 @@ if __name__ == '__main__':
 
 
 
-    time.sleep(400)
+#    time.sleep(400)
     while (1):
         try:
             db = DB()
@@ -27,7 +27,8 @@ if __name__ == '__main__':
                         url = pred[0]
                         value = float("{0:.2f}".format(pred[1]))
                         news_date = pred[2]
-                        db.insert_news(url, value, news_date)
+                        firsttime_tweets = pred[3]
+                        db.insert_news(url, value, news_date, firsttime_tweets)
 
                 sleep_time = engine.syncClock()
                 print "Спим {} секунд".format(sleep_time)

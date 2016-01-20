@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 __author__ = 'popka'
-
+from BotEngine.Statistic import Statistic
 
 class Chats:
 
@@ -40,7 +40,7 @@ class Chats:
         :param user_id:
         :param user_name:
         """
-        self.chats[chat_id] = {}
+        self.chats[chat_id] = Statistic.default_dict
         self.db.add_chat(chat_id, user_id, user_name)
 
 

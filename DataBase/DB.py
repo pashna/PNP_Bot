@@ -14,8 +14,8 @@ class DB():
     str_add_chat = "insert into chats (id_chat, user_id, user_name) VALUES ({}, '{}', '{}');"
 
     # News
-    str_get_new_news = "select news_url, news_predicted from news where is_sended=0;"
-    str_add_news = "insert into news (news_url, news_predicted, is_sended, news_date) VALUES ('{}', {}, 0, '{}');"
+    str_get_new_news = "select news_url, news_predicted, firsttime_tweets from news where is_sended=0;"
+    str_add_news = "insert into news (news_url, news_predicted, is_sended, news_date, firsttime_tweets) VALUES ('{}', {}, 0, '{}', {});"
     str_mark_news_as_sent = "update news set is_sended=1 where news_url='{}';"
     str_get_news_after_date = "select news_url, news_predicted from news where news_date>'{}'"
 
@@ -32,13 +32,13 @@ class DB():
         self.cursor = self.db.cursor()
 
 
-    def insert_news(self, url, predicted, news_date):
+    def insert_news(self, url, predicted, news_date, firsttime_tweets):
         """
         Добавляет новость в базу
         :param url:
         :param predicted:
         """
-        add_string = DB.str_add_news.format(url, predicted, news_date)
+        add_string = DB.str_add_news.format(url, predicted, news_date, firsttime_tweets)
         print add_string
         self.cursor.execute(add_string)
 

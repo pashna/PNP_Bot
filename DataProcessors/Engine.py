@@ -35,12 +35,12 @@ class Engine():
         df = df.drop_duplicates().dropna()
         df.reset_index(inplace=True, drop=True)
 
-        return df[self.x_features].as_matrix(), df["url"], df["news_date"]
+        return df[self.x_features].as_matrix(), df["url"], df["news_date"], df["first_time_tweet"]
 
 
     def predict(self):
 
-        empty = [("", 0, "")]
+        empty = [("", 0, "", 0)]
 
         news_df = self.news_loader.get_actual_news(self.date)
         tweets_df = self.twitter_loader.get_actual_tweets(self.date)
@@ -53,7 +53,7 @@ class Engine():
         if len(df) == 0:
             return empty
 
-        X, urls, news_date = self._get_params(df)
+        X, urls, news_date, first_time_tweets = self._get_params(df)
 
         if len(X) == 0:
             return empty
@@ -62,7 +62,7 @@ class Engine():
         y = self.model.predict(X)
         y = np.exp(y)-1
 
-        return zip(urls, y, news_date)
+        return zip(urls, y, news_date, first_time_tweets)
 
 
     def syncClock(self):

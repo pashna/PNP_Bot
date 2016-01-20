@@ -12,23 +12,25 @@ from utils.utils import get_news_type
 
 if __name__ == '__main__':
 
-    #time.sleep(400)
- #   while 1:
- #       try:
+    time.sleep(400)
+    while 1:
+        try:
             db = DB()
             chats = Chats(db)
             bot = Bot(db, chats)
 
             while(1):
-
+                print "cicle"
                 date = datetime.today() + timedelta(minutes=1)
 
                 new_news = db.get_new_news()
-                for news, predicted in new_news:
+                for news, predicted, firsttime_tweets in new_news:
 
                     news_type = get_news_type(news)
                     chats_list = chats.get_relevant_chats(news_type, predicted)
-                    bot.send_message(chats_list, news, predicted)
+
+
+                    bot.send_message(chats_list, news, predicted, firsttime_tweets)
 
                     db.mark_news_as_sent(news)
 
@@ -36,6 +38,6 @@ if __name__ == '__main__':
 
                 if (time_to_sleep > 0):
                     time.sleep(time_to_sleep)
-
-#        except Exception as e:
-#            print "TelegramBot Exception: {}".format(e)
+                    
+        except Exception as e:
+            print "TelegramBot Exception: {}".format(e)

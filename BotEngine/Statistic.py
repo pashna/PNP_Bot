@@ -19,19 +19,23 @@ class Statistic():
         self.db = db
 
 
-    """
+
     def get_statistic(self, hours, restriction):
         result_matrix = self._get_real_and_predicted(hours)
 
-        print(result_matrix)
+        if result_matrix is None:
+            return None
 
-        result = {"missed":0, "correct":0, "error": 0, "all": 0}
+        result = {"missed":0, "correct":0, "error": 0, "filtered": 0, "all": 0}
 
         for row in result_matrix:
             print row
             type = get_news_type(row[0])
+            if type in restriction:
+                threshold = restriction[type]
+            else:
+                threshold = self.get_default_threshold(type)
 
-            threshold = self.get_threshold(type)
             real = row[1]
             predicted = row[2]
 
@@ -47,21 +51,29 @@ class Statistic():
             if real > threshold and predicted < threshold:
                 result["missed"] += 1
 
+            # если правильно отсейяли
+            if real < threshold and predicted < threshold:
+                result["filtered"] += 1
+
+
             result["all"] += 1
 
         return result
-    """
 
+
+    """
     def get_statistic(self, hours, restriction):
-        """
+
         :param hours: Время, за которое собираем статистику
         :param restriction: ограничения для пользователя, который ее запрашивает
         :param deviation: ошибка в процентах, которую считаем адекватной. Может, заменить функцией какой-нибудь?
         :return:
-        """
+
         result_matrix = self._get_real_and_predicted(hours)
 
         result = {"missed":0, "correct":0, "error": 0, "all": 0, "ndcg": 0}
+
+
 
         showed_real_predicted = []
         for row in result_matrix:
@@ -97,6 +109,7 @@ class Statistic():
 
         return result
 
+    """
 
     def _get_division(self, y):
         return 0.4/(1+exp(-0.003*y))
@@ -106,6 +119,9 @@ class Statistic():
     def _get_real_and_predicted(self, hours):
         real_df = self._get_df_real(hours)
         predicted_df = self._get_df_from_db(hours)
+
+        if (real_df is None) or (predicted_df is None):
+            return None
 
         df = predicted_df.merge(real_df, on='url', how='inner', left_index=True, right_index=False)
 
@@ -143,19 +159,21 @@ class Statistic():
         return df
 
 
-    def get_default_threshold(self, type):
-        dict = {
-            'VC': 23,
-            'forbes.ru': 31,
-            'lenta.ru': 28,
-            'lifenews.ru': 186,
-            'meduza.io': 155,
-            'navalny.com': 289,
-            'ria.ru': 6,
+    default_dict = {
+            'vc.ru': 16,
+            'tjournal.ru': 35,
+            'forbes.ru': 20,
+            'lenta.ru': 19,
+            'lifenews.ru': 98,
+            'meduza.io': 65,
+            'navalny.com': 226,
+            'ria.ru': 5,
             'roem.ru': 1,
-            'slon.ru': 122,
-            'vedomosti.ru': 25,
-            'vesti.ru': 73,
+            'slon.ru': 65,
+            'vedomosti.ru': 9,
+            'vesti.ru': 30,
         }
 
-        return dict[type]
+    def get_default_threshold(self, type):
+
+        return Statistic.default_dict[type]
