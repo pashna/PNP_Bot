@@ -53,7 +53,6 @@ class NewsLoader():
 
         df, self.last_file_name = self.loader.get_concated_files(self.OUT_NEWS_FOLDER, date, "url", self.last_file_name)
         if df is None:
-            print "EMPTY"
             return None
 
         if self.news_df is not None:

@@ -3,6 +3,7 @@ __author__ = 'popka'
 
 import MySQLdb
 import Config
+import logging
 
 
 class DB():
@@ -39,7 +40,6 @@ class DB():
         :param predicted:
         """
         add_string = DB.str_add_news.format(url, predicted, news_date, firsttime_tweets)
-        print add_string
         self.cursor.execute(add_string)
 
 
@@ -83,7 +83,7 @@ class DB():
             str = DB.str_add_chat.format(chat_id, user_id, user_name)
             self.cursor.execute(str)
         except Exception:
-            print "already in db"
+            logging.error("already in db")
 
 
     def get_news_after_date(self, date):

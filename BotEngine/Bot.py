@@ -8,6 +8,7 @@ from Config import *
 from Statistic import Statistic
 import sys, traceback
 from utils.utils import get_text_after_number, merge_two_dicts
+import logging
 
 
 class Bot():
@@ -95,9 +96,7 @@ class Bot():
 
 
         except Exception as e:
-            print e
-            traceback.print_exc(file=sys.stdout)
-
+            logging.exception("stat_exception")
             bot.sendMessage(chat_id=update.message.chat_id, text="Не понял. Введи, например\n /stat 15\n - статистика за 15 часов\nВозможно, промежуток времени недостаточный")
 
 
@@ -126,7 +125,7 @@ class Bot():
             bot.sendMessage(chat_id=chat_id, text="Установил для {} ограничение в {} {}".format(type, value, tweets_text))
 
         except Exception as e:
-            print e
+            logging.exception("restriction_exception")
             bot.sendMessage(chat_id=update.message.chat_id, text="Не понял. Введи, например\n /restrict lenta.ru 5")
 
 
@@ -180,7 +179,7 @@ class Bot():
             bot.sendMessage(chat_id=chat_id, text="Текущие пороги, в соотвествии с которыми Вы получаете сообщения:{}".format(chats_text))
 
         except Exception as e:
-            print e
+            logging.exception("info exception")
             bot.sendMessage(chat_id=update.message.chat_id, text="Что-то пошло не так. Мне кажется я заболел. Попробуй позже.")
 
 
@@ -200,7 +199,7 @@ class Bot():
             bot.sendMessage(chat_id=chat_id, text=text)
 
         except Exception as e:
-            print e
+            logging.exception("help exception")
             bot.sendMessage(chat_id=update.message.chat_id, text="Что-то пошло не так. Мне кажется я заболел. Попробуй позже.")
 
 
@@ -217,5 +216,5 @@ class Bot():
             bot.sendMessage(chat_id=chat_id, text=text)
 
         except Exception as e:
-            print e
+            logging.exception("sites exception")
             bot.sendMessage(chat_id=update.message.chat_id, text="Что-то пошло не так. Мне кажется я заболел. Попробуй позже.")

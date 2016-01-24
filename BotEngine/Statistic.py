@@ -29,7 +29,6 @@ class Statistic():
         result = {"missed":0, "correct":0, "error": 0, "filtered": 0, "all": 0}
 
         for row in result_matrix:
-            print row
             type = get_news_type(row[0])
             if type in restriction:
                 threshold = restriction[type]

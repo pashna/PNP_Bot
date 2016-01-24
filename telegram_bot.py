@@ -8,11 +8,15 @@ from BotEngine.Bot import Bot
 from BotEngine.Chats import Chats
 from datetime import datetime, timedelta
 from utils.utils import get_news_type
+from Config import GET_NEWS_FOLDER
+import logging
 
 
 if __name__ == '__main__':
 
     time.sleep(400)
+    logging.basicConfig(format = u'%(filename)s[LINE:%(lineno)d]# %(levelname)-8s [%(asctime)s]  %(message)s', level = logging.DEBUG, filename=GET_NEWS_FOLDER() + "/" + "telegram_bot.log")
+
     while 1:
         try:
             db = DB()
@@ -20,7 +24,6 @@ if __name__ == '__main__':
             bot = Bot(db, chats)
 
             while(1):
-                print "cicle"
                 date = datetime.today() + timedelta(minutes=1)
 
                 new_news = db.get_new_news()
@@ -40,4 +43,5 @@ if __name__ == '__main__':
                     time.sleep(time_to_sleep)
                     
         except Exception as e:
-            print "TelegramBot Exception: {}".format(e)
+            logging.exception("exception")
+            #print "TelegramBot Exception: {}".format(e)

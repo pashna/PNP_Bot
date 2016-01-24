@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 __author__ = 'popka'
 from BotEngine.Statistic import Statistic
+import logging
 
 class Chats:
 
@@ -19,7 +20,7 @@ class Chats:
         for chat in chats:
             chat_list[chat[0]] = {}
 
-        print chat_list
+        logging.debug(chat_list)
         return chat_list
 
 

@@ -146,7 +146,6 @@ class DataAggregator:
         st_df = df[df["time_since_news"] <= self.last_time]
 
         if len(st_df) == 0:
-            print "NONE"
             return None
 
         grouped = st_df.groupby("url")

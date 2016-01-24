@@ -18,6 +18,9 @@ def get_text_after_number(number, words_array):
     :param words_array: массив существительных [час, часа, часов] ([1, 3, 11])
     :return:
     """
+
+    number = number % 100
+
     if (number > 10 and number < 20) or (number%10 == 0):
         return words_array[2]
 
