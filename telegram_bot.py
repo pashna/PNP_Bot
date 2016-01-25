@@ -8,14 +8,14 @@ from BotEngine.Bot import Bot
 from BotEngine.Chats import Chats
 from datetime import datetime, timedelta
 from utils.utils import get_news_type
-from Config import GET_NEWS_FOLDER
+from Config import GET_LOGGER_FOLDER
 import logging
 
 
 if __name__ == '__main__':
 
     time.sleep(400)
-    logging.basicConfig(format = u'%(filename)s[LINE:%(lineno)d]# %(levelname)-8s [%(asctime)s]  %(message)s', level = logging.DEBUG, filename=GET_NEWS_FOLDER() + "/" + "telegram_bot.log")
+    logging.basicConfig(format = u'%(filename)s[LINE:%(lineno)d]# %(levelname)-8s [%(asctime)s]  %(message)s', level = logging.DEBUG, filename=GET_LOGGER_FOLDER() + "/" + "telegram_bot.log")
 
     while 1:
         try:

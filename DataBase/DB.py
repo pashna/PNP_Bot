@@ -19,6 +19,7 @@ class DB():
     str_add_news = "insert into news (news_url, news_predicted, is_sended, news_date, firsttime_tweets) VALUES ('{}', {}, 0, '{}', {});"
     str_mark_news_as_sent = "update news set is_sended=1 where news_url='{}';"
     str_get_news_after_date = "select news_url, news_predicted from news where news_date>'{}'"
+    str_update_real_value = "update news set news_real={} where news_url='{}';"
 
 
     def __init__(self):
@@ -91,3 +92,9 @@ class DB():
         self.cursor.execute(str)
         rows = self.cursor.fetchall()
         return rows
+
+
+    def set_real_value(self, url, real):
+        str = DB.str_update_real_value.format(real, url)
+        print str
+        self.cursor.execute(str)

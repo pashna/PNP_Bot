@@ -21,7 +21,7 @@ class Statistic():
 
 
     def get_statistic(self, hours, restriction):
-        result_matrix = self._get_real_and_predicted(hours)
+        result_matrix = self.get_real_and_predicted(hours)
 
         if result_matrix is None:
             return None
@@ -115,7 +115,13 @@ class Statistic():
 
 
 
-    def _get_real_and_predicted(self, hours):
+    def get_real_and_predicted(self, hours):
+        """
+        Возврщает, результат работы за hours часов
+        DF, [url, GET_PREDICTED_FEATURE(), predicted]
+        :param hours:
+        :return:
+        """
         real_df = self._get_df_real(hours)
         predicted_df = self._get_df_from_db(hours)
 
@@ -173,6 +179,6 @@ class Statistic():
             'vesti.ru': 30,
         }
 
-    def get_default_threshold(self, type):
 
+    def get_default_threshold(self, type):
         return Statistic.default_dict[type]
