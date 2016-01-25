@@ -12,6 +12,7 @@ import logging
 
 if __name__ == '__main__':
     logging.basicConfig(format = u'%(filename)s[LINE:%(lineno)d]# %(levelname)-8s [%(asctime)s]  %(message)s', level = logging.DEBUG, filename=GET_LOGGER_FOLDER() + "/" + "proofer.log")
+    time.sleep(4*3600)
     while True:
         try:
 
@@ -21,7 +22,9 @@ if __name__ == '__main__':
 
             while True:
 
+                logging.debug("new iteration")
                 date += timedelta(hours=1)
+
                 result_matrix = statistic.get_real_and_predicted(4)
 
                 if result_matrix is not None:
@@ -43,3 +46,4 @@ if __name__ == '__main__':
 
         except Exception as e:
             logging.exception("exception")
+            time.sleep(600)
