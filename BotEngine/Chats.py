@@ -18,7 +18,7 @@ class Chats:
         chats = self.db.get_chats()
         chat_list = {}
         for chat in chats:
-            chat_list[chat[0]] = {}
+            chat_list[chat[0]] = Statistic.default_dict
 
         logging.debug(chat_list)
         return chat_list
