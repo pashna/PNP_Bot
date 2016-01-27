@@ -21,8 +21,8 @@ class Engine():
         with open('gb_regressor.pkl', 'rb') as fid:
             self.model = cPickle.load(fid)
 
-        self.df_features = ["url", "news_date", "week_day_news", "minutes_since_midnight", "first_time_tweet", "follower_sum", "retweeted_count_sum", "user_listed_count_sum", 'VC', 'forbes.ru', 'lenta.ru', 'lifenews.ru', 'meduza.io', 'navalny.com', 'ria.ru', 'roem.ru', 'slon.ru', 'vedomosti.ru', 'vesti.ru']
-        self.x_features = ["week_day_news", "minutes_since_midnight", "first_time_tweet","follower_sum", "retweeted_count_sum", "user_listed_count_sum",  'VC', 'forbes.ru', 'lenta.ru', 'lifenews.ru', 'meduza.io', 'navalny.com', 'ria.ru', 'roem.ru', 'slon.ru', 'vedomosti.ru', 'vesti.ru']
+        self.df_features = ['url', 'news_date', 'last_time_tweet', 'week_day_news', 'minutes_since_midnight', 'first_time_tweet', 'follower_sum', 'retweeted_count_sum', 'user_listed_count_sum', 'TJ_P', 'VC', 'forbes.ru', 'lenta.ru', 'lifenews.ru', 'meduza.io', 'navalny.com', 'ria.ru', 'roem.ru', 'slon.ru','vedomosti.ru']
+        self.x_features = ['week_day_news', 'minutes_since_midnight', 'first_time_tweet', 'follower_sum', 'retweeted_count_sum', 'user_listed_count_sum', 'TJ_P', 'VC', 'forbes.ru', 'lenta.ru', 'lifenews.ru', 'meduza.io', 'navalny.com', 'ria.ru', 'roem.ru', 'slon.ru', 'vedomosti.ru']
 
 
     def _get_params(self, df):

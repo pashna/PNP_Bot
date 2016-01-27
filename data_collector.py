@@ -12,7 +12,7 @@ if __name__ == '__main__':
 
 
 
-#    time.sleep(400)
+    time.sleep(400)
     logging.basicConfig(format = u'%(filename)s[LINE:%(lineno)d]# %(levelname)-8s [%(asctime)s]  %(message)s', level = logging.DEBUG, filename=GET_LOGGER_FOLDER() + "/" + "data_collector.log")
     while (1):
         try:
@@ -29,7 +29,8 @@ if __name__ == '__main__':
                         value = float("{0:.2f}".format(pred[1]))
                         news_date = pred[2]
                         firsttime_tweets = pred[3]
-                        db.insert_news(url, value, news_date, firsttime_tweets)
+                        print (url, value, news_date, firsttime_tweets)
+                        #db.insert_news(url, value, news_date, firsttime_tweets)
 
                 sleep_time = engine.syncClock()
                 logging.debug("Sleeping  for {} seconds".format(sleep_time))

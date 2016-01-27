@@ -36,6 +36,7 @@ class DataAggregator:
             return int((date-midnight).total_seconds()/60)
 
         dataframe["time_since_news"] = dataframe.apply(lambda s: diff_date_minutes(s["news_date"], s["created_at"]), axis=1)
+
         dataframe["week_day_news"] = dataframe.news_date.apply(lambda s: get_week_day(s))
         dataframe["minutes_since_midnight"] = dataframe.news_date.apply(lambda s: get_minutes_since_midnight(s))
 
