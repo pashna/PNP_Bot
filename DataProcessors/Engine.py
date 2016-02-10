@@ -21,8 +21,53 @@ class Engine():
         with open('gb_regressor.pkl', 'rb') as fid:
             self.model = cPickle.load(fid)
 
-        self.df_features = ['url', 'news_date', 'last_time_tweet', 'week_day_news', 'minutes_since_midnight', 'first_time_tweet', 'follower_sum', 'retweeted_count_sum', 'user_listed_count_sum', 'TJ_P', 'VC', 'forbes.ru', 'lenta.ru', 'lifenews.ru', 'meduza.io', 'navalny.com', 'ria.ru', 'roem.ru', 'slon.ru','vedomosti.ru']
-        self.x_features = ['week_day_news', 'minutes_since_midnight', 'first_time_tweet', 'follower_sum', 'retweeted_count_sum', 'user_listed_count_sum', 'TJ_P', 'VC', 'forbes.ru', 'lenta.ru', 'lifenews.ru', 'meduza.io', 'navalny.com', 'ria.ru', 'roem.ru', 'slon.ru', 'vedomosti.ru']
+        self.df_features = \
+        [
+
+            # DF_ONLY
+            'url', 'news_date', 'type',
+            #Features
+            '15_time_tweet', '15_follower_sum', '12_time_tweet', '12_follower_sum',
+            '9_time_tweet', '9_follower_sum', '6_time_tweet', '6_follower_sum',
+            '3_time_tweet', '3_follower_sum',
+            'is_monday', 'is_tuesday', 'is_wednesday', 'is_thursday', 'is_friday', 'is_saturday', 'is_sunday',
+            'is_day', 'is_morning', 'is_evening', 'is_night',
+            'first_time_tweet', 'follower_sum', 'retweeted_count_sum',
+            'user_listed_count_sum', 'user_verified_sum', 'user_rank_sum',
+
+            # Y
+            'last_time_tweet', 'last_time_retweet',
+
+            # sites
+            '1prime.ru', '3dnews.ru', 'TJ_P', 'VC', 'apparat.cc', 'bg.ru', 'cossa.ru', 'ferra.ru',
+            'firrma.ru', 'fontanka.ru', 'forbes.ru', 'gazeta.ru', 'geektimes.ru', 'habrahabr.ru', 'inosmi.ru', 'interfax.ru',
+            'iphones.ru', 'ixbt.com', 'izvestia.ru', 'kp.ru', 'lenta.ru', 'lifenews.ru', 'meduza.io', 'megamozg.ru', 'msk.kp.ru',
+            'navalny.com', 'newsru.com', 'novayagazeta.ru', 'nplus1.ru', 'ntv.ru', 'paperpaper.ru', 'polit.ru', 'radiovesti.ru',
+            'rapsinews.ru', 'regnum.ru', 'ria.ru', 'roem.ru', 'russian.rt.com', 'slon.ru', 'svoboda.org', 'tass.ru', 'tvrain.ru', 'vedomosti.ru'
+
+        ]
+
+
+        self.x_features = \
+        [
+
+            #Features
+            '15_time_tweet', '15_follower_sum', '12_time_tweet', '12_follower_sum',
+            '9_time_tweet', '9_follower_sum', '6_time_tweet', '6_follower_sum',
+            '3_time_tweet', '3_follower_sum',
+            'is_monday', 'is_tuesday', 'is_wednesday', 'is_thursday', 'is_friday', 'is_saturday', 'is_sunday',
+            'is_day', 'is_morning', 'is_evening', 'is_night',
+            'first_time_tweet', 'follower_sum', 'retweeted_count_sum',
+            'user_listed_count_sum', 'user_verified_sum', 'user_rank_sum',
+
+            # sites
+            '1prime.ru', '3dnews.ru', 'TJ_P', 'VC', 'apparat.cc', 'bg.ru', 'cossa.ru', 'ferra.ru',
+            'firrma.ru', 'fontanka.ru', 'forbes.ru', 'gazeta.ru', 'geektimes.ru', 'habrahabr.ru', 'inosmi.ru', 'interfax.ru',
+            'iphones.ru', 'ixbt.com', 'izvestia.ru', 'kp.ru', 'lenta.ru', 'lifenews.ru', 'meduza.io', 'megamozg.ru', 'msk.kp.ru',
+            'navalny.com', 'newsru.com', 'novayagazeta.ru', 'nplus1.ru', 'ntv.ru', 'paperpaper.ru', 'polit.ru', 'radiovesti.ru',
+            'rapsinews.ru', 'regnum.ru', 'ria.ru', 'roem.ru', 'russian.rt.com', 'slon.ru', 'svoboda.org', 'tass.ru', 'tvrain.ru', 'vedomosti.ru'
+
+        ]
 
 
     def _get_params(self, df):
@@ -60,7 +105,6 @@ class Engine():
 
         # Predict
         y = self.model.predict(X)
-        y = np.exp(y)-1
 
         return zip(urls, y, news_date, first_time_tweets)
 
