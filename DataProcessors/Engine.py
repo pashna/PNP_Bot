@@ -7,6 +7,7 @@ from DataAggregator import DataAggregator
 import cPickle
 import numpy as np
 from datetime import datetime, timedelta
+import Config
 
 class Engine():
 
@@ -18,7 +19,7 @@ class Engine():
 
         self.date = datetime.today() - timedelta(minutes=1)
 
-        with open('gb_regressor.pkl', 'rb') as fid:
+        with open(Config.GET_REGRESSOR(), 'rb') as fid:
             self.model = cPickle.load(fid)
 
         self.df_features = \

@@ -3,6 +3,7 @@ __author__ = 'popka'
 
 import time
 from DataProcessors.Engine import Engine
+from DataProcessors.PredictedHandler import PredictedHandler
 from DataBase.DB import DB
 from datetime import datetime
 from Config import GET_FIRST_TIME, GET_NEWS_FOLDER, GET_LOGGER_FOLDER
@@ -13,24 +14,22 @@ if __name__ == '__main__':
 
     time.sleep(400)
     logging.basicConfig(format = u'%(filename)s[LINE:%(lineno)d]# %(levelname)-8s [%(asctime)s]  %(message)s', level = logging.DEBUG, filename=GET_LOGGER_FOLDER() + "/" + "data_collector.log")
+
     while (1):
         try:
             db = DB()
             engine = Engine(GET_FIRST_TIME())
+            predicted_handler = PredictedHandler(db)
 
             while(1):
+                # делаем предсказания
                 predicted = engine.predict()
                 logging.debug("{}:    predicted = {}".format(datetime.today(), predicted))
-                for pred in predicted:
-                    # Если новость есть
-                    if pred[0] != "":
-                        url = pred[0]
-                        value = float("{0:.2f}".format(pred[1]))
-                        news_date = pred[2]
-                        firsttime_tweets = pred[3]
-                        print (url, value, news_date, firsttime_tweets)
-                        #db.insert_news(url, value, news_date, firsttime_tweets)
 
+                # отправляем нужные в базу
+                predicted_handler.handle_predicted(predicted)
+
+                # спим необходимое время
                 sleep_time = engine.syncClock()
                 logging.debug("Sleeping  for {} seconds".format(sleep_time))
                 time.sleep(sleep_time)
@@ -38,4 +37,4 @@ if __name__ == '__main__':
 
         except Exception as e:
             logging.exception("exception")
-            #print "DataCollector Exception: {}".format(e)
+

@@ -4,11 +4,17 @@ from urlparse import urlparse
 __author__ = 'popka'
 
 
-def get_news_type(news):
-    url = urlparse(news)
-    news = url.netloc
-    news = news.replace("www.", "")
-    return news
+def get_news_type(url):
+    url = url.replace("www.", "")
+
+    if "://" in url:
+        url = url.split("://")[1]
+
+    url = url.split("/")[0]
+    splited = url.split(".")
+
+    return splited[-2] + "." + splited[-1]
+
 
 
 def get_text_after_number(number, words_array):
