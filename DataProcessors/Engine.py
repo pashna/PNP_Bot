@@ -11,13 +11,15 @@ import Config
 
 class Engine():
 
-    def __init__(self, first_time):
+    def __init__(self, first_time, last_time):
         self.first_time = first_time
+        self.last_time = last_time
         self.twitter_loader = TwitterLoader(first_time)
         self.news_loader = NewsLoader(first_time)
-        self.data_aggregator = DataAggregator(first_time)
+        self.data_aggregator = DataAggregator(first_time, last_time)
 
         self.date = datetime.today() - timedelta(minutes=1)
+        #self.date = datetime.strptime("2016-02-11 23:25:29", "%Y-%m-%d %H:%M:%S")
 
         with open(Config.GET_REGRESSOR(), 'rb') as fid:
             self.model = cPickle.load(fid)
@@ -90,6 +92,9 @@ class Engine():
 
         news_df = self.news_loader.get_actual_news(self.date)
         tweets_df = self.twitter_loader.get_actual_tweets(self.date)
+        print news_df["url"].as_matrix()
+
+        print "news_len = {},  tw_len = {}".format(len(news_df),len(tweets_df))
 
         if news_df is None or tweets_df is None or len(news_df) == 0 or len(tweets_df) == 0:
             return empty

@@ -62,7 +62,6 @@ class FileReader():
             if os.path.exists(past_folder):
                 folders.append(past_folder)
 
-
         return folders
 
 

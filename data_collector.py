@@ -6,19 +6,19 @@ from DataProcessors.Engine import Engine
 from DataProcessors.PredictedHandler import PredictedHandler
 from DataBase.DB import DB
 from datetime import datetime
-from Config import GET_FIRST_TIME, GET_NEWS_FOLDER, GET_LOGGER_FOLDER
+from Config import GET_FIRST_TIME, GET_NEWS_FOLDER, GET_LOGGER_FOLDER, GET_LAST_TIME
 import logging
 
 if __name__ == '__main__':
 
 
-    time.sleep(400)
-    logging.basicConfig(format = u'%(filename)s[LINE:%(lineno)d]# %(levelname)-8s [%(asctime)s]  %(message)s', level = logging.DEBUG, filename=GET_LOGGER_FOLDER() + "/" + "data_collector.log")
+    #time.sleep(400)
+    logging.basicConfig(format = u'%(filename)s[LINE:%(lineno)d]# %(levelname)-8s [%(asctime)s]  %(message)s', level = logging.DEBUG)#, filename=GET_LOGGER_FOLDER() + "/" + "data_collector.log")
 
     while (1):
         try:
             db = DB()
-            engine = Engine(GET_FIRST_TIME())
+            engine = Engine(GET_FIRST_TIME(), GET_LAST_TIME())
             predicted_handler = PredictedHandler(db)
 
             while(1):

@@ -36,13 +36,13 @@ class NewsLoader():
             return int((date_from-date).total_seconds()/60)
 
         # Считаем, сколько времени прошло с момента публикации
-        self.news_df["time_since_published"] = self.news_df.news_date.apply(lambda s: get_minutes_since_date(s, date))
+        self.news_df["time_since_published_news"] = self.news_df.news_date.apply(lambda s: get_minutes_since_date(s, date))
 
 
         # Удаляем устарвшие записи:
-        self.news_df = self.news_df[self.news_df["time_since_published"] < self.time+5]
+        self.news_df = self.news_df[self.news_df["time_since_published_news"] < self.time+5]
 
-        return self.news_df[self.news_df["time_since_published"] == self.time]
+        return self.news_df[self.news_df["time_since_published_news"] == self.time]
 
 
     def _load_new_news(self, date):

@@ -3,6 +3,7 @@ import pandas as pd
 from datetime import datetime, timedelta
 import numpy as np
 from math import log, sqrt, pow
+import logging
 
 
 class DataAggregator:
@@ -164,6 +165,19 @@ class DataAggregator:
         # агрегируем получившиеся значения для First_time
         df = self._first_time_aggregate(df)
 
+
+
+        """
+        Был прецедент, когда почему-то tw_id были неуникальными! Важно узнать, нет ли такого больше
+        ========================================================
+        DEBUG!!!
+        """
+        if sum(df.tw_id.duplicated()) > 0:
+            logging.error("TW_ID DUPLICATED:\n{}".format(df))
+        """
+        =========================================================
+        """
+
         #ONE HOT ENCODING
         df = self._one_hot_encoding(df, df_columns)
 
@@ -241,7 +255,7 @@ class DataAggregator:
         """
 
         x_features = []
-        time = self.FIRST_TIME
+        time = self.first_time
 
         # считаем абсолютные значения
         while(time > 0):
@@ -253,16 +267,40 @@ class DataAggregator:
             count_of_tweets = pd.DataFrame(grouped["url"].count())
             feature_name = str(time)+"_time_tweet"
             x_features.append(feature_name)
-            count_of_tweets.columns = [feature_name]
-            count_of_tweets[feature_name].fillna(value=0, inplace=True)
-            count_of_tweets.reset_index(inplace=True)
+
+            # бывают случаи, когда твиттов за период нет совсем => пустой df => ошибка при merge
+            # Поэтому, для этого случая, созданим пустой dataframe (url, 0)
+            if len(count_of_tweets)>0:
+                count_of_tweets.columns = [feature_name]
+                count_of_tweets[feature_name].fillna(value=0, inplace=True)
+                count_of_tweets.reset_index(inplace=True)
+            else:
+                #print "ELSE"
+                url_list = list(df.url.unique())
+                zipped = zip(url_list, [0]*len(url_list))
+                count_of_tweets = pd.DataFrame(zipped, columns=["url", feature_name])
+
+
+            #print count_of_tweets#.columns
+            #print df.columns
+
             df = pd.merge(df, count_of_tweets, on='url', left_index=True, right_index=False, how="outer")
 
             follower_sum = pd.DataFrame(grouped["user_followers_count"].sum())
             feature_name = str(time)+"_follower_sum"
             x_features.append(feature_name)
-            follower_sum.columns = [feature_name]
-            follower_sum.reset_index(inplace=True)
+
+            # бывают случаи, когда твиттов за период нет совсем => пустой df => ошибка при merge
+            # Поэтому, для этого случая, созданим пустой dataframe (url, 0)
+            if len(follower_sum)>0:
+                follower_sum.columns = [feature_name]
+                follower_sum[feature_name].fillna(value=0, inplace=True)
+                follower_sum.reset_index(inplace=True)
+            else:
+                url_list = list(df.url.unique())
+                zipped = zip(url_list, [0]*len(url_list))
+                follower_sum = pd.DataFrame(zipped, columns=["url", feature_name])
+
             df = pd.merge(df, follower_sum, on='url', left_index=True, right_index=False, how="outer")
 
             time -= self.step
@@ -271,12 +309,11 @@ class DataAggregator:
 
 
         # считаем приращения
-        time = self.FIRST_TIME
+        time = self.first_time
 
         while(time > self.step):
             df["{}_time_tweet".format(time)] = df["{}_time_tweet".format(time)] - df["{}_time_tweet".format(time-self.step)]
             df["{}_follower_sum".format(time)] = df["{}_follower_sum".format(time)] - df["{}_follower_sum".format(time-self.step)]
-            print time, " - ", time-self.step
             time -= self.step
 
         return df

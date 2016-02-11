@@ -38,10 +38,10 @@ class TwitterLoader():
             return int((date_from-date).total_seconds()/60)
 
         # Считаем, сколько времени прошло с момента публикации
-        self.tweets_df["time_since_published"] = self.tweets_df.created_at.apply(lambda s: get_minutes_since_date(s, date))
+        self.tweets_df["time_since_published_tweet"] = self.tweets_df.created_at.apply(lambda s: get_minutes_since_date(s, date))
 
         # Удаляем устарвшие записи:
-        self.tweets_df = self.tweets_df[self.tweets_df["time_since_published"] < self.time]
+        self.tweets_df = self.tweets_df[self.tweets_df["time_since_published_tweet"] < self.time]
 
         return self.tweets_df
 
