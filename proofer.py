@@ -33,7 +33,6 @@ if __name__ == '__main__':
                     for row in result_matrix:
                         url = row[0]
                         real = row[1]
-                        print url, real
                         db.set_real_value(url, real)
 
                 else:

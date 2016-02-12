@@ -74,9 +74,7 @@ class Statistic():
         # Вычисляем время, за hours часов до текущего момента
         date = datetime.today() - timedelta(hours=hours)
         date = date.strftime('%Y-%m-%d %H:%M')
-        print date
         db_values = list(self.db.get_news_after_date_with_positive_real(date))
-        print db_values
 
         return db_values
 

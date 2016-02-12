@@ -92,9 +92,9 @@ class Engine():
 
         news_df = self.news_loader.get_actual_news(self.date)
         tweets_df = self.twitter_loader.get_actual_tweets(self.date)
-        print news_df["url"].as_matrix()
 
-        print "news_len = {},  tw_len = {}".format(len(news_df),len(tweets_df))
+
+
 
         if news_df is None or tweets_df is None or len(news_df) == 0 or len(tweets_df) == 0:
             return empty
@@ -122,7 +122,7 @@ class Engine():
         :return:
         """
         self.date += timedelta(minutes=1)
-        print "prog_time = {}    real_time = {}".format(self.date, datetime.today())
+        #print "prog_time = {}    real_time = {}".format(self.date, datetime.today())
         sleep_time = int ( ((self.date+timedelta(minutes=1)) - datetime.today()).total_seconds() )
 
         return sleep_time

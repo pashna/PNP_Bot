@@ -91,11 +91,8 @@ class DB():
 
     def get_news_after_date_with_positive_real(self, date):
         str = DB.str_get_news_after_date_with_positive_real.format(date)
-        print(str)
         self.cursor.execute(str)
-        print(self.cursor)
         rows = self.cursor.fetchall()
-        print rows
         return rows
 
 
@@ -108,5 +105,4 @@ class DB():
 
     def set_real_value(self, url, real):
         str = DB.str_update_real_value.format(real, url)
-        print str
         self.cursor.execute(str)
