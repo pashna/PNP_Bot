@@ -126,6 +126,7 @@ class FileReader():
         :return:
         """
         folders = self._get_folder_name(datetime.today(), folder, hours)
+        #folders = self._get_folder_name(datetime.strptime("2016-02-11 23:25:29", "%Y-%m-%d %H:%M:%S"), folder, hours)
         files_in_folder = self._get_files_in_folder(folders)
 
         df = None

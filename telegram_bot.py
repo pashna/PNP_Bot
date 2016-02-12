@@ -14,8 +14,8 @@ import logging
 
 if __name__ == '__main__':
 
-    #time.sleep(400)
-    logging.basicConfig(format = u'%(filename)s[LINE:%(lineno)d]# %(levelname)-8s [%(asctime)s]  %(message)s', level=logging.ERROR)#, filename=GET_LOGGER_FOLDER() + "/" + "telegram_bot.log")
+    time.sleep(400)
+    logging.basicConfig(format = u'%(filename)s[LINE:%(lineno)d]# %(levelname)-8s [%(asctime)s]  %(message)s', level=logging.ERROR, filename=GET_LOGGER_FOLDER() + "/" + "telegram_bot.log")
 
     while 1:
         try:

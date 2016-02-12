@@ -19,19 +19,21 @@ if __name__ == '__main__':
             db = DB()
             statistic = Statistic(GET_FIRST_TIME(), GET_LAST_TIME(), db)
             date = datetime.today()
+            #date = datetime.strptime("2016-02-12 02:25:29", "%Y-%m-%d %H:%M:%S")
 
             while True:
 
                 logging.debug("new iteration")
                 date += timedelta(hours=1)
 
-                result_matrix = statistic.get_real_and_predicted(4)
+                result_matrix = statistic.get_real_and_predicted(25)
 
                 if result_matrix is not None:
                     logging.debug("updating {} news".format(len(result_matrix)))
                     for row in result_matrix:
                         url = row[0]
                         real = row[1]
+                        print url, real
                         db.set_real_value(url, real)
 
                 else:

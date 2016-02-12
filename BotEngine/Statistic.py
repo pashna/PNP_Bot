@@ -23,7 +23,7 @@ class Statistic():
 
 
     def get_statistic(self, hours, restriction):
-        result_matrix = self._get_df_from_db(hours)
+        result_matrix = self._get_statistic_list_from_db(hours)
 
         if len(result_matrix)==0:# is None:
             return None
@@ -66,6 +66,21 @@ class Statistic():
         return 0.4/(1+exp(-0.003*y))
 
 
+    def _get_statistic_list_from_db(self, hours):
+        """
+        Возвращает все новости из таблицы news в формате DF, которые опубликованы в последние hours часов, и имею неотрицательный real_value
+        :param hours:
+        """
+        # Вычисляем время, за hours часов до текущего момента
+        date = datetime.today() - timedelta(hours=hours)
+        date = date.strftime('%Y-%m-%d %H:%M')
+        print date
+        db_values = list(self.db.get_news_after_date_with_positive_real(date))
+        print db_values
+
+        return db_values
+
+
     def _get_df_from_db(self, hours):
         """
         Возвращает все новости из таблицы news в формате DF, которые опубликованы в последние hours часов
@@ -74,11 +89,10 @@ class Statistic():
         # Вычисляем время, за hours часов до текущего момента
         date = datetime.today() - timedelta(hours=hours)
         date = date.strftime('%Y-%m-%d %H:%M')
-        print date
-        db_values = list(self.db.get_news_after_date(date))
-        print db_values
 
-        return db_values
+        db_values = list(self.db.get_news_after_date(date))
+        df = pd.DataFrame(data=db_values, columns=["url", "predicted"])
+        return df
 
 
     def get_default_threshold(self, type):
@@ -95,3 +109,39 @@ class Statistic():
             logging.exception("exception")
 
         return threshold
+
+
+    def get_real_and_predicted(self, hours):
+        """
+        Возврщает, результат работы за hours часов
+        DF, [url, GET_PREDICTED_FEATURE(), predicted]
+        :param hours:
+        :return:
+        """
+        real_df = self._get_df_real(hours)
+        predicted_df = self._get_df_from_db(hours)
+
+        if (real_df is None) or (predicted_df is None):
+            return None
+
+        df = predicted_df.merge(real_df, on='url', how='inner', left_index=True, right_index=False)
+
+        return df[["url", Config.GET_PREDICTED_FEATURE(), "predicted"]].as_matrix()
+
+
+
+    def _get_df_real(self, hours):
+        """
+        Функция возвращает аггрегированный DF за hours часов.
+        :param hours:
+        """
+        news_df = self.loader.get_concat_files_by_hours(Config.GET_NEWS_FOLDER(), hours, "url")
+        tweets_df = self.loader.get_concat_files_by_hours(Config.GET_TWEETS_FOLDER(), hours, "tw_id")
+
+        df = self.data_aggregator.aggregate_last_time(news_df, tweets_df)
+
+        if df is None:
+            return None
+
+        df = df[self.df_features]
+        return df.drop_duplicates()
