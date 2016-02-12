@@ -9,6 +9,7 @@ from Statistic import Statistic
 import sys, traceback
 from utils.utils import get_text_after_number, merge_two_dicts
 import logging
+from Config import DEFAULT_THRESHOLD
 
 
 class Bot():
@@ -26,6 +27,7 @@ class Bot():
         dispatcher.addTelegramCommandHandler('info', self.info)
         dispatcher.addTelegramCommandHandler('help', self.help)
         dispatcher.addTelegramCommandHandler('sites', self.sites)
+        dispatcher.addTelegramCommandHandler('threshold', self.change_threshold)
         dispatcher.addTelegramMessageHandler(self.answer)
 
         self.updater.start_polling()
@@ -54,8 +56,8 @@ class Bot():
             text = text.split(' ')
             hours = int(text[1])
 
-            if hours > 48:
-                text = "Не больше 48 часов"
+            if hours > 120:
+                text = "Не больше 120 часов"
                 bot.sendMessage(chat_id=chat_id, text=text)
                 return
 
@@ -86,7 +88,7 @@ class Bot():
             # Добавляем информацию о порогах
             text += "\n\n"
             text += "Статистика была расчитана по порогам:"
-            threshold = merge_two_dicts(Statistic.default_dict, self.chats.chats[chat_id])
+            threshold = merge_two_dicts(DEFAULT_THRESHOLD, self.chats.chats[chat_id])
             for key, value in threshold.iteritems():
                 text +="\n"
                 text += str(int(value)) + " : " + str(key)
@@ -111,9 +113,9 @@ class Bot():
             value = int(text[2])
 
             # Если такого сайта нет, сообщаем об этом
-            if type not in Statistic.default_dict.keys():
+            if type not in DEFAULT_THRESHOLD.keys():
                 text = "Такого сайта нет. Выбирай любой из:\n"
-                for key in Statistic.default_dict.keys():
+                for key in DEFAULT_THRESHOLD.keys():
                     text += key
                     text += "\n"
                 bot.sendMessage(chat_id=update.message.chat_id, text=text)
@@ -127,6 +129,35 @@ class Bot():
         except Exception as e:
             logging.exception("restriction_exception")
             bot.sendMessage(chat_id=update.message.chat_id, text="Не понял. Введи, например\n /restrict lenta.ru 5")
+
+
+    def change_threshold(self, bot, update):
+        try:
+            message = update['message']
+            chat_id = update.message.chat_id
+
+            text = message['text']
+            text = text.split(' ')
+            percent = int(text[1])
+
+            if percent < 0:
+                action = "Уменьшил"
+            else:
+                action = "Увеличил"
+
+            percent_text = get_text_after_number(abs(percent), ["процент", "процента", "процентов"])
+
+            chats = self.chats.chats[chat_id]
+
+            chats_text = ""
+            for key, value in chats.iteritems():
+                chats[key] += int(value*percent/100)
+
+            bot.sendMessage(chat_id=chat_id, text="{} пороги всех сайтов на {} {}".format(action, abs(percent), percent_text))
+
+        except Exception as e:
+            logging.exception("restriction_exception")
+            bot.sendMessage(chat_id=update.message.chat_id, text="Не понял. Введи, например\n /increase 10")
 
 
     def answer(self, bot, update):
@@ -193,6 +224,7 @@ class Bot():
                    "Команда /stat 10\n- выдает статистику моей работы за последние 10 часов\n\n" \
                    "Команда /info\n- покажет текущие пороги, по которым я высылаю новости \n\n" \
                    "Команда /sites\n- покажет список сайтов, для которых я умею предсказывать популярность новостей \n\n" \
+                   "Команда /threshold 10\n- увеличит пороги для всех сайтов на 10%. Чтобы уменьшить используйте /threshold -10 \n\n" \
                    "А теперь прости, мне нужно работать"
 
 
@@ -209,7 +241,7 @@ class Bot():
             chat_id = update.message.chat_id
 
             text = "Я неплохо предсказываю:\n"
-            for site in Statistic.default_dict.keys():
+            for site in DEFAULT_THRESHOLD.keys():
                 text += "\n"
                 text += site
 

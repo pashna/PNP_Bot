@@ -2,6 +2,7 @@
 __author__ = 'popka'
 from BotEngine.Statistic import Statistic
 import logging
+from Config import DEFAULT_THRESHOLD
 
 class Chats:
 
@@ -18,7 +19,7 @@ class Chats:
         chats = self.db.get_chats()
         chat_list = {}
         for chat in chats:
-            chat_list[chat[0]] = Statistic.default_dict
+            chat_list[chat[0]] = DEFAULT_THRESHOLD
 
         logging.debug(chat_list)
         return chat_list
@@ -41,7 +42,7 @@ class Chats:
         :param user_id:
         :param user_name:
         """
-        self.chats[chat_id] = Statistic.default_dict
+        self.chats[chat_id] = DEFAULT_THRESHOLD
         self.db.add_chat(chat_id, user_id, user_name)
 
 

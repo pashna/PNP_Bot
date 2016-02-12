@@ -8,6 +8,8 @@ from datetime import datetime, timedelta
 import pandas as pd
 from utils.utils import get_news_type
 from math import exp
+from Config import DEFAULT_THRESHOLD
+import logging
 
 
 class Statistic():
@@ -79,21 +81,17 @@ class Statistic():
         return db_values
 
 
-    default_dict = {
-            'vc.ru': 16,
-            'tjournal.ru': 35,
-            'forbes.ru': 20,
-            'lenta.ru': 19,
-            'lifenews.ru': 98,
-            'meduza.io': 65,
-            'navalny.com': 226,
-            'ria.ru': 5,
-            'roem.ru': 1,
-            'slon.ru': 65,
-            'vedomosti.ru': 9,
-            'vesti.ru': 30,
-        }
-
-
     def get_default_threshold(self, type):
-        return Statistic.default_dict[type]
+        """
+        Возвращает значение порога, по которому будет расчитана правильность статистики.
+        Если по какой-то причине нет новости такого типа, то возвращаем заведомо большое число 555555.
+        :param type:
+        :return:
+        """
+        threshold = 555555
+        try:
+            threshold = DEFAULT_THRESHOLD[type]
+        except Exception as e:
+            logging.exception("exception")
+
+        return threshold
