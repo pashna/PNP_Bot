@@ -12,7 +12,7 @@ import logging
 if __name__ == '__main__':
 
 
-    time.sleep(400)
+    #time.sleep(400)
     logging.basicConfig(format = u'%(filename)s[LINE:%(lineno)d]# %(levelname)-8s [%(asctime)s]  %(message)s', level = logging.DEBUG, filename=GET_LOGGER_FOLDER() + "/" + "data_collector.log")
 
     while (1):

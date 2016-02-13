@@ -17,7 +17,6 @@ class PredictedHandler():
         :param predicted: массив кортежей[ (str url, float predicted, str date, int firsttime_tweets)
         """
 
-        logging.DEBUG("predicted = {}".format(predicted))
         for pred in predicted:
             url = pred[0]
             value = float("{0:.2f}".format(pred[1]))
@@ -29,5 +28,5 @@ class PredictedHandler():
                 value > 0 and \
                 (get_news_type(url) in DEFAULT_THRESHOLD.keys()):
 
-                    #print (url, value, news_date, firsttime_tweets)
-                    self.db.insert_news(url, value, news_date, firsttime_tweets)
+                    print (url, value, news_date, firsttime_tweets)
+                    #self.db.insert_news(url, value, news_date, firsttime_tweets)

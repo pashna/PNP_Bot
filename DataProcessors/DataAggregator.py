@@ -20,10 +20,25 @@ class DataAggregator:
         :return:
         """
         dataframe = self._time_since_news(dataframe)
+        if sum(dataframe.tw_id.duplicated()) > 0:
+            logging.error("24")
+        else:
+            logging.debug("24 OK")
         dataframe = self._week_day(dataframe)
+        if sum(dataframe.tw_id.duplicated()) > 0:
+            logging.error("29")
+        else:
+            logging.debug("29 OK")
         dataframe = self._day_period(dataframe)
+        if sum(dataframe.tw_id.duplicated()) > 0:
+            logging.error("34")
+        else:
+            logging.debug("36 OK")
         dataframe = self._user_rank(dataframe)
-
+        if sum(dataframe.tw_id.duplicated()) > 0:
+            logging.error("39")
+        else:
+            logging.debug("39 OK")
         return dataframe
 
 
@@ -53,15 +68,14 @@ class DataAggregator:
         week_days = ['is_monday','is_tuesday', 'is_wednesday', 'is_thursday', 'is_friday', 'is_saturday', 'is_sunday']
 
         def get_week_day(date):
-            global week_day
             date = datetime.strptime(date, '%Y-%m-%d %H:%M')
             return week_days[date.weekday()]
 
         # one-hot encoding дня недели
         dataframe["week_day_news"] = dataframe.news_date.apply(lambda s: get_week_day(s))
 
-        dummy = pd.get_dummies(dataframe['week_day_news'])
-        dataframe = dataframe.join(dummy)
+        dataframe = pd.concat([dataframe, dataframe['week_day_news'].str.get_dummies()], axis=1)
+        print dataframe.columns
 
         return dataframe
 
@@ -98,8 +112,8 @@ class DataAggregator:
                 return "is_evening"
 
         dataframe["time_period"] = dataframe.minutes_since_midnight.apply(lambda s: get_time_period(s))
-        dummy = pd.get_dummies(dataframe['time_period'])
-        dataframe = dataframe.join(dummy)
+        dataframe = pd.concat([dataframe, dataframe['time_period'].str.get_dummies()], axis=1)
+
 
         return dataframe
 
@@ -156,30 +170,55 @@ class DataAggregator:
         if len(dataframe) == 0:
             return dataframe
 
+
+        if sum(dataframe.tw_id.duplicated()) > 0:
+            logging.error("161")
+        else:
+            logging.debug("161 OK")
+
         # выполняем общие преобразования
         df = self._general_apply(dataframe)
+
+        if sum(df.tw_id.duplicated()) > 0:
+            logging.error("169")
+        else:
+            logging.debug("169 OK")
 
         # считаем приращения показателей по шагам
         df = self._count_diff_by_step(df)
 
+        if sum(df.tw_id.duplicated()) > 0:
+            logging.error("177")
+        else:
+            logging.debug("177 OK")
+
         # агрегируем получившиеся значения для First_time
         df = self._first_time_aggregate(df)
 
+        if sum(df.tw_id.duplicated()) > 0:
+            logging.error("185")
+        else:
+            logging.debug("185 OK")
 
 
         """
         Был прецедент, когда почему-то tw_id были неуникальными! Важно узнать, нет ли такого больше
         ========================================================
-        DEBUG!!!
+        debug!!!
         """
         if sum(df.tw_id.duplicated()) > 0:
-            logging.error("TW_ID DUPLICATED:\n{}".format(df))
+            logging.error("TW_ID DUPLICATED:\n{}".format(df[["url", "tw_id", "screen_name", "created_at", "news_date", "first_time_tweet"]]))
         """
         =========================================================
         """
 
         #ONE HOT ENCODING
         df = self._one_hot_encoding(df, df_columns)
+
+        if sum(df.tw_id.duplicated()) > 0:
+            logging.error("205")
+        else:
+            logging.debug("205 OK")
 
         return df
 
@@ -194,7 +233,6 @@ class DataAggregator:
         for col in df_columns:
             if col not in df.columns:
                 df[col] = pd.Series(np.zeros(len(df)))
-
 
         return df
 

@@ -90,10 +90,12 @@ class Engine():
 
         empty = [("", 0, "", 0)]
 
+        #debug
+        #self.date = datetime.strptime("2016-02-13 03:31:08", "%Y-%m-%d %H:%M:%S")
+
+
         news_df = self.news_loader.get_actual_news(self.date)
         tweets_df = self.twitter_loader.get_actual_tweets(self.date)
-
-
 
 
         if news_df is None or tweets_df is None or len(news_df) == 0 or len(tweets_df) == 0:
@@ -110,6 +112,8 @@ class Engine():
             return empty
 
         # Predict
+        #print df[["url", "tw_id", "screen_name", "created_at", "news_date", "first_time_tweet"]]
+
         y = self.model.predict(X)
 
         return zip(urls, y, news_date, first_time_tweets)
@@ -122,7 +126,7 @@ class Engine():
         :return:
         """
         self.date += timedelta(minutes=1)
-        #print "prog_time = {}    real_time = {}".format(self.date, datetime.today())
+        print "prog_time = {}    real_time = {}".format(self.date, datetime.today())
         sleep_time = int ( ((self.date+timedelta(minutes=1)) - datetime.today()).total_seconds() )
 
         return sleep_time

@@ -87,7 +87,6 @@ class FileReader():
 
             # образаем полный путь
             if file.split("/")[-1] > last_file_name.split("/")[-1]:
-
                 n_df = pd.read_csv(file, sep=",")
                 if df is None:
                     df = n_df
