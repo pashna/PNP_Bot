@@ -170,6 +170,7 @@ class Bot():
 
 
     def send_message(self, chats, url, news_type, news_title, predicted, first_time_tweets):
+        # (chats_list, news_url, news_type, news_title, predicted, firsttime_tweets)
         #text = "Ухты! Ты только глянь, какая новость! Наберет {} твиттов! {}".format(int(predicted), url)
 
         first_time_text = get_text_after_number(GET_FIRST_TIME(), ["минута", "минуты", "минут"])
@@ -182,9 +183,9 @@ class Bot():
                "Через {} {} она наберет примерно {} {}.\n"\
                 "{}" \
             .format(news_type, news_title, \
-                    url, \
-                    GET_FIRST_TIME(), first_time_text,first_time_tweets, first_time_tweets_text,  \
-                    GET_LAST_TIME(), last_time_text, int(predicted), predicted_time_tweets_text)
+                    GET_FIRST_TIME(), first_time_text, first_time_tweets, first_time_tweets_text,  \
+                    GET_LAST_TIME(), last_time_text, int(predicted), predicted_time_tweets_text, \
+                    url)
 
         for chat_id in chats:
                 requests.get("https://api.telegram.org/bot{}/sendmessage?chat_id={}&text={}".format(GET_TOKEN(), chat_id, text))
