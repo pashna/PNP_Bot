@@ -23,7 +23,7 @@ class DataAggregator:
         dataframe = self._week_day(dataframe)
         dataframe = self._day_period(dataframe)
         dataframe = self._user_rank(dataframe)
-        
+
         return dataframe
 
 
