@@ -91,7 +91,7 @@ class Engine():
         empty = [("", 0, "", 0, "", "")]
 
         #debug
-        self.date = datetime.strptime("2016-02-13 03:31:08", "%Y-%m-%d %H:%M:%S")
+        #self.date = datetime.strptime("2016-02-13 03:31:08", "%Y-%m-%d %H:%M:%S")
 
         news_df = self.news_loader.get_actual_news(self.date)
         tweets_df = self.twitter_loader.get_actual_tweets(self.date)
