@@ -28,7 +28,7 @@ class Engine():
         [
 
             # DF_ONLY
-            'url', 'news_date', 'type', "title"
+            'url', 'news_date', 'type', "title",
             #Features
             '15_follower_sum', '12_time_tweet', '12_follower_sum',
             '9_time_tweet', '9_follower_sum', '6_time_tweet', '6_follower_sum',
