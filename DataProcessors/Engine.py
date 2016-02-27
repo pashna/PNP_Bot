@@ -8,6 +8,7 @@ import cPickle
 import numpy as np
 from datetime import datetime, timedelta
 import Config
+import logging
 
 class Engine():
 
@@ -30,7 +31,7 @@ class Engine():
             # DF_ONLY
             'url', 'news_date', 'type', "title",
             #Features
-            '15_follower_sum', '12_time_tweet', '12_follower_sum',
+            '15_time_tweet', '15_follower_sum', '12_time_tweet', '12_follower_sum',
             '9_time_tweet', '9_follower_sum', '6_time_tweet', '6_follower_sum',
             '3_time_tweet', '3_follower_sum',
             'is_monday', 'is_tuesday', 'is_wednesday', 'is_thursday', 'is_friday', 'is_saturday', 'is_sunday',
@@ -55,7 +56,7 @@ class Engine():
         [
 
             #Features
-            '15_follower_sum', '12_time_tweet', '12_follower_sum',
+            '15_time_tweet', '15_follower_sum', '12_time_tweet', '12_follower_sum',
             '9_time_tweet', '9_follower_sum', '6_time_tweet', '6_follower_sum',
             '3_time_tweet', '3_follower_sum',
             'is_monday', 'is_tuesday', 'is_wednesday', 'is_thursday', 'is_friday', 'is_saturday', 'is_sunday',
@@ -91,7 +92,7 @@ class Engine():
         empty = [("", 0, "", 0, "", "")]
 
         #debug
-        #self.date = datetime.strptime("2016-02-13 03:31:08", "%Y-%m-%d %H:%M:%S")
+        self.date = datetime.strptime("2016-02-13 03:31:08", "%Y-%m-%d %H:%M:%S")
 
         news_df = self.news_loader.get_actual_news(self.date)
         tweets_df = self.twitter_loader.get_actual_tweets(self.date)
@@ -124,7 +125,6 @@ class Engine():
         :return:
         """
         self.date += timedelta(minutes=1)
-        print "prog_time = {}    real_time = {}".format(self.date, datetime.today())
         sleep_time = int ( ((self.date+timedelta(minutes=1)) - datetime.today()).total_seconds() )
 
         return sleep_time

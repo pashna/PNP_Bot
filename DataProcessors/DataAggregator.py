@@ -20,25 +20,10 @@ class DataAggregator:
         :return:
         """
         dataframe = self._time_since_news(dataframe)
-        if sum(dataframe.tw_id.duplicated()) > 0:
-            logging.error("24")
-        else:
-            logging.debug("24 OK")
         dataframe = self._week_day(dataframe)
-        if sum(dataframe.tw_id.duplicated()) > 0:
-            logging.error("29")
-        else:
-            logging.debug("29 OK")
         dataframe = self._day_period(dataframe)
-        if sum(dataframe.tw_id.duplicated()) > 0:
-            logging.error("34")
-        else:
-            logging.debug("36 OK")
         dataframe = self._user_rank(dataframe)
-        if sum(dataframe.tw_id.duplicated()) > 0:
-            logging.error("39")
-        else:
-            logging.debug("39 OK")
+        
         return dataframe
 
 
@@ -170,36 +155,19 @@ class DataAggregator:
         if len(dataframe) == 0:
             return dataframe
 
-
-        if sum(dataframe.tw_id.duplicated()) > 0:
-            logging.error("161")
-        else:
-            logging.debug("161 OK")
-
         # выполняем общие преобразования
         df = self._general_apply(dataframe)
 
-        if sum(df.tw_id.duplicated()) > 0:
-            logging.error("169")
-        else:
-            logging.debug("169 OK")
 
         # считаем приращения показателей по шагам
         df = self._count_diff_by_step(df)
 
-        if sum(df.tw_id.duplicated()) > 0:
-            logging.error("177")
-        else:
-            logging.debug("177 OK")
 
         # агрегируем получившиеся значения для First_time
         df = self._first_time_aggregate(df)
 
-        if sum(df.tw_id.duplicated()) > 0:
-            logging.error("185")
-        else:
-            logging.debug("185 OK")
-
+        #ONE HOT ENCODING
+        df = self._one_hot_encoding(df, df_columns)
 
         """
         Был прецедент, когда почему-то tw_id были неуникальными! Важно узнать, нет ли такого больше
@@ -211,14 +179,6 @@ class DataAggregator:
         """
         =========================================================
         """
-
-        #ONE HOT ENCODING
-        df = self._one_hot_encoding(df, df_columns)
-
-        if sum(df.tw_id.duplicated()) > 0:
-            logging.error("205")
-        else:
-            logging.debug("205 OK")
 
         return df
 
