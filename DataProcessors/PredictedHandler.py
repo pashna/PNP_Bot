@@ -16,12 +16,14 @@ class PredictedHandler():
         функция проверяет, данные, пришедшие от модуля предсказания и, если они ок, то записывает их в базу
         :param predicted: массив кортежей[ (str url, float predicted, str date, int firsttime_tweets)
         """
-
+        print predicted
         for pred in predicted:
             url = pred[0]
             value = float("{0:.2f}".format(pred[1]))
             news_date = pred[2]
             firsttime_tweets = pred[3]
+            news_type = pred[4]
+            news_title = pred[5]
 
             # Если новость есть, значение неотрицательно и домен входит в число "обслуживаемых"
             if url != "" and \
@@ -29,4 +31,4 @@ class PredictedHandler():
                 (get_news_type(url) in DEFAULT_THRESHOLD.keys()):
 
                     #print (url, value, news_date, firsttime_tweets)
-                    self.db.insert_news(url, value, news_date, firsttime_tweets)
+                    self.db.insert_news(url, news_type, news_title, value, news_date, firsttime_tweets)

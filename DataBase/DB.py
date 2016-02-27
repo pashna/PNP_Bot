@@ -15,8 +15,9 @@ class DB():
     str_add_chat = "insert into chats (id_chat, user_id, user_name) VALUES ({}, '{}', '{}');"
 
     # News
-    str_get_new_news = "select news_url, news_predicted, firsttime_tweets from news where is_sended=0;"
-    str_add_news = "insert into news (news_url, news_predicted, is_sended, news_date, firsttime_tweets) VALUES ('{}', {}, 0, '{}', {});"
+    str_get_new_news = "select news_url, news_type, news_title, news_predicted, firsttime_tweets from news where is_sended=0;"
+    str_add_news = "insert into news (news_url, news_type, news_title, news_predicted, is_sended, news_date, firsttime_tweets) VALUES ('{}', '{}', '{}', '{}', 0, '{}', {});"
+
     str_mark_news_as_sent = "update news set is_sended=1 where news_url='{}';"
     str_get_news_after_date_with_positive_real = "select news_url, news_real, news_predicted from news where news_date>'{}' and news_real > 0"
     str_update_real_value = "update news set news_real={} where news_url='{}';"
@@ -36,13 +37,14 @@ class DB():
         self.cursor = self.db.cursor()
 
 
-    def insert_news(self, url, predicted, news_date, firsttime_tweets):
+    def insert_news(self, url, news_type, news_title, predicted, news_date, firsttime_tweets):
         """
         Добавляет новость в базу
         :param url:
         :param predicted:
         """
-        add_string = DB.str_add_news.format(url, predicted, news_date, firsttime_tweets)
+        "insert into news (news_url, news_type, news_title, news_predicted, is_sended, news_date, firsttime_tweets) VALUES ('{}', '{}', '{}', '{}', 0, '{}', {});"
+        add_string = DB.str_add_news.format(url, news_type, news_title, predicted, news_date, firsttime_tweets)
         self.cursor.execute(add_string)
 
 

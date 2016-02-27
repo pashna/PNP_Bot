@@ -27,15 +27,15 @@ if __name__ == '__main__':
                 date = datetime.today() + timedelta(minutes=1)
 
                 new_news = db.get_new_news()
-                for news, predicted, firsttime_tweets in new_news:
+                # news_url, news_type, news_title, news_predicted, firsttime_tweets
+                for news_url, news_type, news_title, predicted, firsttime_tweets in new_news:
 
-                    news_type = get_news_type(news)
+                    news_type = get_news_type(news_url)
                     chats_list = chats.get_relevant_chats(news_type, predicted)
 
+                    bot.send_message(chats_list, news_url, news_type, news_title, predicted, firsttime_tweets)
 
-                    bot.send_message(chats_list, news, predicted, firsttime_tweets)
-
-                    db.mark_news_as_sent(news)
+                    db.mark_news_as_sent(news_url)
 
                 time_to_sleep = int ((date - datetime.today()).total_seconds())
 

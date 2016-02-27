@@ -169,7 +169,7 @@ class Bot():
         bot.sendMessage(chat_id=update.message.chat_id, text="Прости, я тут вообще-то новости анализирую, мне некогда болтать")
 
 
-    def send_message(self, chats, url, predicted, first_time_tweets):
+    def send_message(self, chats, url, news_type, news_title, predicted, first_time_tweets):
         #text = "Ухты! Ты только глянь, какая новость! Наберет {} твиттов! {}".format(int(predicted), url)
 
         first_time_text = get_text_after_number(GET_FIRST_TIME(), ["минута", "минуты", "минут"])
@@ -177,10 +177,12 @@ class Bot():
         first_time_tweets_text = get_text_after_number(first_time_tweets, ["твит", "твита", "твитов"])
         predicted_time_tweets_text = get_text_after_number(int(predicted), ["твит", "твита", "твитов"])
 
-        text = "{}\n" \
+        text = "{}: {}\n" \
                "За первые {} {} новость уже набрала {} {}. \n" \
-               "Через {} {} она наберет примерно {} {}."\
-            .format(url, \
+               "Через {} {} она наберет примерно {} {}.\n"\
+                "{}" \
+            .format(news_type, news_title, \
+                    url, \
                     GET_FIRST_TIME(), first_time_text,first_time_tweets, first_time_tweets_text,  \
                     GET_LAST_TIME(), last_time_text, int(predicted), predicted_time_tweets_text)
 

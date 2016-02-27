@@ -28,9 +28,9 @@ class Engine():
         [
 
             # DF_ONLY
-            'url', 'news_date', 'type',
+            'url', 'news_date', 'type', "title"
             #Features
-            '15_time_tweet', '15_follower_sum', '12_time_tweet', '12_follower_sum',
+            '15_follower_sum', '12_time_tweet', '12_follower_sum',
             '9_time_tweet', '9_follower_sum', '6_time_tweet', '6_follower_sum',
             '3_time_tweet', '3_follower_sum',
             'is_monday', 'is_tuesday', 'is_wednesday', 'is_thursday', 'is_friday', 'is_saturday', 'is_sunday',
@@ -55,7 +55,7 @@ class Engine():
         [
 
             #Features
-            '15_time_tweet', '15_follower_sum', '12_time_tweet', '12_follower_sum',
+            '15_follower_sum', '12_time_tweet', '12_follower_sum',
             '9_time_tweet', '9_follower_sum', '6_time_tweet', '6_follower_sum',
             '3_time_tweet', '3_follower_sum',
             'is_monday', 'is_tuesday', 'is_wednesday', 'is_thursday', 'is_friday', 'is_saturday', 'is_sunday',
@@ -83,20 +83,18 @@ class Engine():
         df = df.drop_duplicates().dropna()
         df.reset_index(inplace=True, drop=True)
 
-        return df[self.x_features].as_matrix(), df["url"], df["news_date"], df["first_time_tweet"]
+        return df[self.x_features].as_matrix(), df["url"], df["news_date"], df["first_time_tweet"], df["type"], df["title"]
 
 
     def predict(self):
 
-        empty = [("", 0, "", 0)]
+        empty = [("", 0, "", 0, "", "")]
 
         #debug
-        #self.date = datetime.strptime("2016-02-13 03:31:08", "%Y-%m-%d %H:%M:%S")
-
+        self.date = datetime.strptime("2016-02-13 03:31:08", "%Y-%m-%d %H:%M:%S")
 
         news_df = self.news_loader.get_actual_news(self.date)
         tweets_df = self.twitter_loader.get_actual_tweets(self.date)
-
 
         if news_df is None or tweets_df is None or len(news_df) == 0 or len(tweets_df) == 0:
             return empty
@@ -106,7 +104,7 @@ class Engine():
         if len(df) == 0:
             return empty
 
-        X, urls, news_date, first_time_tweets = self._get_params(df)
+        X, urls, news_date, first_time_tweets, news_types, titles = self._get_params(df)
 
         if len(X) == 0:
             return empty
@@ -116,7 +114,7 @@ class Engine():
 
         y = self.model.predict(X)
 
-        return zip(urls, y, news_date, first_time_tweets)
+        return zip(urls, y, news_date, first_time_tweets, news_types, titles)
 
 
     def syncClock(self):
